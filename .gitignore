@@ -1,3 +1,9 @@
+#data files for testing
+files/
+#code for decode .vo2
+old_code/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
