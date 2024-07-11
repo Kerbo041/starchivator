@@ -1,3 +1,14 @@
+<<<<<<< Updated upstream
+=======
+#data files for testing
+files/
+decoded_files/
+test/
+#code for decode .vo2
+old_code/
+
+
+>>>>>>> Stashed changes
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
