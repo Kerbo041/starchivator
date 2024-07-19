@@ -18,7 +18,7 @@ def tdatetime_to_datetime(tdatetime_in_bytes: bytes) -> datetime:
     return datetime(1899, 12, 30) + timedelta(days=tdatetime)
 
 
-if __name__ == "__main__":
+def aaa():
 
     file = read_file(read_path)
 
@@ -36,3 +36,6 @@ if __name__ == "__main__":
     for line in file_data:
             print(line, file=datafile)
     datafile.close()
+
+if __name__ == "__main__":
+    aaa()
