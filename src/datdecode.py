@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from typing import BinaryIO
 import struct
 
-read_path = "files/out.dat"
-desc_path = "decoded_files/"
+read_path = "src/files/out.dat"
+desc_path = "src/decoded_files/"
 
 def read_file(path: str) -> bytearray:
     with open(path, "rb") as file:
