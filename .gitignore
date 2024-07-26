@@ -3,7 +3,7 @@
 #data files for testing
 files/
 decoded_files/
-test/
+src/test/
 #code for decode .vo2
 old_code/
 
