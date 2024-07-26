@@ -14,8 +14,6 @@ def tdatetime_to_datetime(tdatetime_in_bytes: bytes) -> datetime:
     return datetime(1899, 12, 30) + timedelta(days=tdatetime)
 
 
-
-
 def read_blocks(file, array_size = 500000):
     blocks= []
 
