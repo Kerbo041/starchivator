@@ -1,0 +1,3 @@
+
+class ArchiveFile():
+    pass

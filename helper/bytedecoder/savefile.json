@@ -1,0 +1,8 @@
+{
+    "default":
+    {
+        "desc": "little-endian",
+        "type": "int",
+        "var": "hex_to_dec"
+    }
+}
