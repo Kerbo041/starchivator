@@ -40,13 +40,22 @@ from struct import pack, unpack
 #     print(i)
 
 # print(f"{a}\t{b}\t{c}")
+  
+# a = bytearray(b'\x40\x0d\x03\x20')
+# b = bytearray(b'\x20\x4e\x00\x00')
+# print(unpack("<i", a))
+# print(unpack("<i", b))
 
-a = bytearray(b'\x40\x0d\x03\x20')
-b = bytearray(b'\x20\x4e\x00\x00')
-print(unpack("<i", a))
-print(unpack("<i", b))
+# a = bytearray(b'\x40\x42\x0f\x20')
+# b = bytearray(b'\xa0\x86\x01\x20')
+# print(unpack("<i", a))
+# print(unpack("<i", b))
+# c2 b9 01 20
+from datetime import datetime, timedelta
 
-a = bytearray(b'\x40\x42\x0f\x20')
-b = bytearray(b'\xa0\x86\x01\x20')
-print(unpack("<i", a))
-print(unpack("<i", b))
+def tdatetime_to_datetime(tdatetime_in_bytes: bytes) -> datetime:
+    tdatetime = unpack("<d", tdatetime_in_bytes)[0]
+    return datetime(1899, 12, 30) + timedelta(days=tdatetime)
+
+print(tdatetime_to_datetime(b'\x57\x56\x37\x53\x06\x01\x00\x00'))
+print(unpack("<d", b'\x57\x56\x37\x53\x06\x01\x00\x00'))
