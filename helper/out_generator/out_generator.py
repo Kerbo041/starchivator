@@ -64,7 +64,7 @@ def look_out_x():
     updated_d_values = values_d
     
     cursor_points_0 = [20, 1000]
-    cursor_points_1 = [100000, 100050]
+    cursor_points_1 = [100000, 100050 ]
     for point in cursor_points_0:
         update_values = value_generation.generate_update_values(point)
         byte_update = bytecoder.bytecoder(update_values)
