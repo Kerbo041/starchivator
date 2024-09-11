@@ -35,7 +35,7 @@ def make_out0(db_path, out_path):
         number = line[0].to_bytes(4, byteorder="little")
         value = get_random_value(line[2], line[3])
         byte_value = struct.pack("<i", value)
-        signal = b"\x05"
+        signal = b"\x03"
         out_file.write(number)
         out_file.write(now)
         out_file.write(byte_value)
@@ -66,16 +66,18 @@ def make_out1(db_path, out_path):
 def main():
     dba_path = "files/DB_A.CSV"
     dbd_path = "files/DB_D.CSV"
-    out0_path = "files/created/out.0"
-    out1_path = "files/created/out.1"
+    # out0_path = "files/created/out.0"
+    # out1_path = "files/created/out.1"
+    out0_path = "C:/spd3/out/out.0"
+    out1_path = "C:/spd3/out/out.1"
 
     while True:
         make_out0(dba_path, out0_path)
         make_out1(dbd_path, out1_path)
         now = str(datetime.now()).replace(".", ",").replace(":", "-")
         print(now)
-        shutil.copy(out0_path, f"files/outfiles/{now}_0")
-        shutil.copy(out1_path, f"files/outfiles/{now}_1")
+        # shutil.copy(out0_path, f"files/outfiles/{now}_0")
+        # shutil.copy(out1_path, f"files/outfiles/{now}_1")
         time.sleep(1)
 
 

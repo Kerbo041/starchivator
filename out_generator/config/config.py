@@ -1,0 +1,6 @@
+db_a_path = "C:\\spd3\\sg3\\DB_A.CSV"
+db_d_path = "C:\\spd3\\sg3\\DB_D.CSV"
+out_0_path = "C:\\spd3\\out\\out.0"
+out_1_path = "C:\\spd3\\out\\out.1"
+out_dat_path = "C:\\spd3\\dat\\out.dat"
+x_dat_path = "C:\\spd3\\dat\\x.dat"
