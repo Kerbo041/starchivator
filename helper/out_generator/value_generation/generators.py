@@ -21,6 +21,11 @@ def generate_random_update_signal():
     signals = [b"\xaa", b"\xaa", b"\xaa", b"\xaa"]
     return signals[random.randint(0, len(signals) - 1)]
 
+def generate_random_update_signal_many(i):
+    # signals = [b"\xae", b"\xbc", b"\xbb", b"\xee"]
+    signals = [b"\xaa", b"\xbb", b"\xcc", b"\xdd"]
+    return signals[i]
+
 def generate_random_discrete_value(length):
     value = random.randint(0, pow(2, length-1))
     return value
