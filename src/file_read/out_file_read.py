@@ -5,13 +5,17 @@ def read_out_file(out_file_path, number_of_values=0):
     with open(out_file_path) as out_file:
         iter = 0
         reading = True
-        out_file_data = []
+        out_file_data = {}
         while iter < number_of_values or reading:
-            read_buffer = read_out_file_line(out_file)
-            line = read_buffer[0]
-            reading = read_buffer[1]
+            reading_buffer = read_out_file_line(out_file)
+            line = reading_buffer[0]
+            reading = reading_buffer[1]
             if reading:
-                out_file_data.append(line)
+                out_file_data[line["Number"]] = {
+                    "Date": line["Date"],
+                    "Value": line["Value"],
+                    "Signal": line["Signal"]
+                    }
             iter += 1
     return out_file_data
 
@@ -21,7 +25,7 @@ def read_out_file_line(out_file):
         number = out_file.read(4)
         date = out_file.read(8)
         value = out_file.read(4)
-        signal = out_file.read(4)
+        signal = out_file.read(1)
         return (
             {
                 "Number": unpack("<i", number),
@@ -47,11 +51,16 @@ def get_empty_line(number):
 
 
 def fill_values_end_with_empty_lines(values, count):
-    analog_length = len(values)
-    if analog_length < 20000:
-        for i in range(analog_length, count):
-            values[i] = get_empty_line(i)
-
+    data_length = len(values)
+    if data_length < count:
+        for i in range(data_length, count):
+            with get_empty_line(i) as empty_line:
+                values[i] = {
+                    "Date": empty_line["Date"],
+                    "Value": empty_line["Value"],
+                    "Signal": empty_line["Signal"]
+                    }
+    
 
 def arrays_join(out_0_file_data, out_1_file_data, analog_count=20000):
     out_values = []
@@ -64,6 +73,7 @@ def arrays_join(out_0_file_data, out_1_file_data, analog_count=20000):
 
 
 def get_out_data(out_0_path, out_1_path, analog_count=20000, discrete_count=180000):
+    
     out_0_file_data = read_out_file(out_0_path)
     out_1_file_data = read_out_file(out_1_path)
 
@@ -71,3 +81,5 @@ def get_out_data(out_0_path, out_1_path, analog_count=20000, discrete_count=1800
     out_1_file_data = fill_values_end_with_empty_lines(out_1_file_data, discrete_count)
 
     out_values = arrays_join(out_0_file_data, out_1_file_data, analog_count)
+
+    return out_values

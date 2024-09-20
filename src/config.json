@@ -1,0 +1,12 @@
+{
+    "Paths": {
+        "Path_x_dat": "test/filegen/x.dat",
+        "Path_out_dat": "test/filegen/out.dat",
+        "Path_out_0": "test/filegen/in.dat"
+    },
+    "HeaderTexts":{
+        "OutDat" : "StarPackOut_VO3 ",
+        "XDat" : "StarPackX___VO3 ",
+        "Archive" : "StarPackArc_VO3 "
+    }
+}
