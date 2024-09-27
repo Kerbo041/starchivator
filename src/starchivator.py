@@ -2,11 +2,10 @@ from src.config.config import get_config
 from src.file_write.outdat_file_write import *
 from src.file_write.xdat_file_write import *
 from src.file_read.out_file_read import *
-from src.file_read.parse_db import *
 from src.data_check.check_data import *
 import time
 
-config_path = "src/config.json"
+config_path = "src/config.json" 
 
 def main_cycle(values, file_paths):
     count = 0

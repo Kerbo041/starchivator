@@ -7,10 +7,11 @@ class TDateTime:
     def tdatetime_to_datetime(tdatetime: float) -> datetime:
         return datetime(1899, 12, 30) + timedelta(days=tdatetime)
     
-    def datetime_to_tdatetime(time_in_datetime: datetime) -> bytes:
+    def datetime_to_tdatetime(time_in_datetime: datetime = datetime.now()) -> bytes:
         delta_time =  time_in_datetime - datetime(1899, 12, 30)
         tdatetime = delta_time.total_seconds()/3600/24
-        return  tdatetime
+        return  tdatetime 
+    
     
     def __str__(self) -> str:
         return str(self.time)
@@ -26,3 +27,4 @@ class TDateTime:
     
     def get_tdatetime(self) -> float:
         return self.datetime_to_tdatetime(self.time)
+    
