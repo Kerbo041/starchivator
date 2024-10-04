@@ -1,8 +1,9 @@
 {
     "Paths": {
-        "Path_x_dat": "test/filegen/x.dat",
-        "Path_out_dat": "test/filegen/out.dat",
-        "Path_out_0": "test/filegen/in.dat"
+        "Path_out_dat": "c:\\spd3\\dat_py\\out.dat",
+        "Path_x_dat": "c:\\spd3\\dat_py\\x.dat",
+        "Path_out_0": "c:\\spd3\\out\\out.0",
+        "Path_out_1": "c:\\spd3\\out\\out.1"
     },
     "HeaderTexts":{
         "OutDat" : "StarPackOut_VO3 ",

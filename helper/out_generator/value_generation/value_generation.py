@@ -77,7 +77,7 @@ def generate_update_values(start):
     ]
     update_values = []
     iter = start
-    for i in hexabytes:
+    for i in hexabytes * 454:
         update_values.append(
             {
                 "number": iter,

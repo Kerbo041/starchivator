@@ -18,7 +18,8 @@ def generate_random_signal():
 
 def generate_random_update_signal():
     # signals = [b"\xae", b"\xbc", b"\xbb", b"\xee"]
-    signals = [b"\xaa", b"\xaa", b"\xaa", b"\xaa"]
+    # signals = [b"\xaa", b"\xaa", b"\xaa", b"\xaa"]
+    signals = [b"\xa8", b"\xa8", b"\xa8", b"\xa8"]
     return signals[random.randint(0, len(signals) - 1)]
 
 def generate_random_update_signal_many(i):

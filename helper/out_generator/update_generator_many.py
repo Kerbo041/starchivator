@@ -12,6 +12,7 @@ import sys
 
 def look_out_x_update(console_arg):
     i = int(console_arg)
+    cursor_points_0 = [0, 0, 0, 0]
     cursor_points_0 = [20, 220, 100, 500]
     # point_0 =  cursor_points_0[random.randint(0, len(cursor_points_0) - 1)]
     point_0 =  cursor_points_0[i]
