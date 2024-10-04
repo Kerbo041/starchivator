@@ -67,4 +67,4 @@ def start(config_path="src/config.json", header_text="StarPack____"):
     main_cycle(values, file_paths, headers)
 
 
-start(config_path="src/config.json")
+start(config_path="c:\\Users\\NOVOSELOV_G\\Documents\\GitHub\\starchivator\\src\\config.json")

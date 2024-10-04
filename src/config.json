@@ -6,8 +6,10 @@
         "Path_out_1": "c:\\spd3\\out\\out.1"
     },
     "HeaderTexts":{
-        "OutDat" : "StarPackOut_VO3 ",
-        "XDat" : "StarPackX___VO3 ",
+        "OutDat" : "StarPackOutPyVo3",
+        "XDat" : "StarPackX_PyVo3 ",
+        "OutDatOld" : "StarPackOut_VO3 ",
+        "XDatOld" : "StarPackX___VO3 ",
         "Archive" : "StarPackArc_VO3 "
     }
 }

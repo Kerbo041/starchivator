@@ -5,7 +5,7 @@ from model.TDateTime import TDateTime
 def x_dat_file_write(
     x_dat_path, changed_values, header_text, special_buffer_signal, next_parameter_index
 ):
-    with open(x_dat_path, "rb+") as x_file:
+    with open(x_dat_path, "ab+") as x_file:
         header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
         is_writing_breaked = write_changed_values(x_file, changed_values)
     return is_writing_breaked
@@ -42,7 +42,7 @@ def write_changed_values(file, сhanged_values):
 
 
 def place_value(file, number, value, count):
-    index = count * 8 + 14
+    index = count * 9 + 32
     file.seek(index)
     file.write(pack("<i", number))
     file.write(value["Value"])
