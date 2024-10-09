@@ -6,6 +6,7 @@
 from file_write.outdat_file_write import out_dat_file_write
 from file_write.xdat_file_write import x_dat_file_write
 from data_check.check_data import check_data_array
+from data_check.buffer_data_to_array import buffer_data
 from file_read.out_file_read import get_out_data
 from config.config import get_config
 from datetime import datetime
@@ -15,7 +16,8 @@ import time
 def main_cycle(values, file_paths, headers):
     current_values = values
     special_buffer_signal = 0
-    next_parameter_index = 0
+    current_parameter_index = 0
+    array_of_buffered_parameters = {}
     current_time = datetime.now()
     print("Packing started")
     while True:
@@ -29,22 +31,26 @@ def main_cycle(values, file_paths, headers):
 
         changed_values = check_data_array(current_values, readed_new_data)
 
-        current_values = readed_new_data
-
-        changed_values_writing_check = x_dat_file_write(
-            file_paths["Path_x_dat"],
-            changed_values,
-            headers["XDat"],
-            special_buffer_signal,
-            next_parameter_index,
+        array_of_buffered_parameters, current_parameter_index = buffer_data(
+            array_of_buffered_parameters, changed_values, current_parameter_index
         )
 
-        if changed_values_writing_check:
-            special_buffer_signal += 1
-            next_parameter_index = 0
+        current_values = readed_new_data
+
+        x_dat_file_write(
+            file_paths["Path_x_dat"],
+            array_of_buffered_parameters,
+            headers["XDat"],
+            special_buffer_signal,
+            current_parameter_index,
+        )
 
         out_dat_file_write(
-            file_paths["Path_out_dat"], current_values, headers["OutDat"], special_buffer_signal, values_count=200000
+            file_paths["Path_out_dat"],
+            current_values,
+            headers["OutDat"],
+            special_buffer_signal,
+            values_count=200000,
         )
 
         time_packing = (datetime.now() - current_time).total_seconds()
@@ -67,4 +73,6 @@ def start(config_path="src/config.json", header_text="StarPack____"):
     main_cycle(values, file_paths, headers)
 
 
-start(config_path="c:\\Users\\NOVOSELOV_G\\Documents\\GitHub\\starchivator\\src\\config.json")
+start(
+    config_path="c:\\Users\\NOVOSELOV_G\\Documents\\GitHub\\starchivator\\src\\config.json"
+)
