@@ -39,8 +39,8 @@ def get_empty_line():
             # "Number": -1,
             # "NumberInBytes": b"\xff\xff\xff\xff",
             # "Date": b"\x00\x00\x00\x00\x00\x00\x00\x00",
-            "Value": b"\x00\x00\x00\x00",
-            "Signal": b"\x08",
+            "Value": b"\xff\xff\xff\xff",
+            "Signal": b"\xff",
         }
 
 

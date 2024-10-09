@@ -31,8 +31,8 @@ def main_cycle(values, file_paths, headers):
 
         changed_values = check_data_array(current_values, readed_new_data)
 
-        array_of_buffered_parameters, current_parameter_index = buffer_data(
-            array_of_buffered_parameters, changed_values, current_parameter_index
+        array_of_buffered_parameters, current_parameter_index, special_buffer_signal = buffer_data(
+            array_of_buffered_parameters, changed_values, current_parameter_index, special_buffer_signal
         )
 
         current_values = readed_new_data
@@ -65,8 +65,8 @@ def start(config_path="src/config.json", header_text="StarPack____"):
     headers = config["HeaderTexts"]
     values = {
         i: {
-            "Value": b"\x00\x00\x00\x00",
-            "Signal": b"\x08",
+            "Value": b"\xff\xff\xff\xff",
+            "Signal": b"\xff",
         }
         for i in range(200000)
     }
