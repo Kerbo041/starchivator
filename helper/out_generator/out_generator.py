@@ -25,7 +25,7 @@ def make_out():
 def make_one():
     db_a_data = dataparse.reader_db_a(config.db_a_path)
     db_d_data = dataparse.reader_db_d(config.db_d_path)
-    values_a = value_generation.generate_analog_values(db_a_data, "walking", "random")
+    values_a = value_generation.generate_analog_values(db_a_data, "random", "random")
     values_d = value_generation.generate_discrete_values(db_d_data, "random", "random")
     bytes_a_values = bytecoder.bytecoder(values_a)
     bytes_d_values = bytecoder.bytecoder(values_d)
