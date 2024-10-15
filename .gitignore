@@ -1,6 +1,7 @@
 #data files for testing
 files/
 test/
+helper/
 #code for decode .vo2
 old_code/
 
