@@ -8,10 +8,11 @@ import time
 import out_gen_checker
 import file_read_and_write.updater as updater
 
+
+
 def make_out():
     db_a_data = dataparse.reader_db_a(config.db_a_path)
     db_d_data = dataparse.reader_db_d(config.db_d_path)
-    
     
     while True:
         values_a = value_generation.generate_analog_values(db_a_data, "walking", "random")
@@ -21,6 +22,27 @@ def make_out():
         outwriter.outwriter(bytes_a_values, config.out_0_path)
         outwriter.outwriter(bytes_d_values, config.out_1_path)
         print(datetime.datetime.now())
+    
+    
+def make_continuously():
+    number_of_updating_values = 5
+    db_a_data = dataparse.reader_db_a(config.db_a_path)
+    db_d_data = dataparse.reader_db_d(config.db_d_path)
+    values_a = value_generation.generate_analog_values(db_a_data, "random", "random")
+    values_d = value_generation.generate_discrete_values(db_d_data, "random", "random")
+    bytes_a_values = bytecoder.bytecoder(values_a)
+    bytes_d_values = bytecoder.bytecoder(values_d)
+    outwriter.outwriter(bytes_a_values, config.out_0_path)
+    outwriter.outwriter(bytes_d_values, config.out_1_path)
+    while True:
+        time.sleep(5)
+        values_a = value_generation.update_some_analog_values(db_a_data, values_a, number_of_updating_values)
+        values_a = value_generation.update_some_discrete_values(db_d_data, values_d, number_of_updating_values)
+        bytes_a_values = bytecoder.bytecoder(values_a)
+        bytes_d_values = bytecoder.bytecoder(values_d)
+        outwriter.outwriter(bytes_a_values, config.out_0_path)
+        outwriter.outwriter(bytes_d_values, config.out_1_path)
+        print("Updated")
         
 def make_one():
     db_a_data = dataparse.reader_db_a(config.db_a_path)
@@ -99,5 +121,5 @@ def look_out_x():
     updated_bytes_d_values = bytecoder.bytecoder(updated_d_values)
     out_gen_checker.check_x_file(updated_bytes_a_values, updated_bytes_d_values, out_dat_values, x_dat_values)
     
-
-make_one()
+make_continuously()
+# make_one()

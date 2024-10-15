@@ -1,6 +1,6 @@
 import datetime
 import value_generation.generators as generators
-
+from random import randint
 
 def get_analog_value(type_a, start_of_interval, end_of_interval):
     types_of_generate = {
@@ -119,8 +119,25 @@ def generate_update_values_many(start, console_int_arg):
                 "number": iter,
                 "time": now_time,
                 "value": int("0x" + (hexabytes[i % 16] * 4), 16),
-                "signal": generators.generate_random_update_signal_many(console_int_arg),
+                "signal": generators.generate_random_update_signal_many(
+                    console_int_arg
+                ),
             }
         )
         iter += 1
     return update_values
+
+
+def update_some_analog_values(db_data, values, number_of_updating_values):
+    update_indexes = [randint(0, len(db_data)) for i in range(number_of_updating_values)]
+    for index in update_indexes:
+        values[index]["value"] = generators.generate_random_analog_value(db_data[index]["min"], db_data[index]["max"])
+        values[index]["time"] = datetime.datetime.now()
+    return values    
+
+def update_some_discrete_values(db_data, values, number_of_updating_values):
+    update_indexes = [randint(0, len(db_data)) for i in range(number_of_updating_values)]
+    for index in update_indexes:
+        values[index]["value"] = generators.generate_random_discrete_value(db_data[index]["length"])
+        values[index]["time"] = datetime.datetime.now()
+    return values    

@@ -55,6 +55,8 @@ def main_cycle(values, file_paths, headers):
 
         time_packing = (datetime.now() - current_time).total_seconds()
         print(f"Packing cycle done, writing time is {time_packing}")
+        print(f"special_buffer_signal is {special_buffer_signal}")
+        print(f"current_parameter_index is {current_parameter_index}")
         if time_packing < 0.5:
             time.sleep(0.5 - time_packing)
 

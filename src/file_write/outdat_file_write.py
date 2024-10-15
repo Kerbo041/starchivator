@@ -1,5 +1,6 @@
 from struct import pack, unpack
 from model.TDateTime import TDateTime
+from datetime import datetime
 
 # from src.model.TDateTime import TDateTime
 
@@ -11,7 +12,7 @@ def out_dat_file_write(out_dat_path, all_values, header_text, special_buffer_sig
 
 def header_write(file, header_text, special_buffer_signal):
     file.write(header_text.encode())
-    file.write(pack("<d", TDateTime.datetime_to_tdatetime()))
+    file.write(pack("<d", TDateTime.datetime_to_tdatetime(datetime.now())))
     file.write(pack("<i", special_buffer_signal))
 
 

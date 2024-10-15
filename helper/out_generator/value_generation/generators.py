@@ -1,6 +1,7 @@
 import random
 import time
 import math
+
 def generate_random_analog_value(start_of_interval, end_of_interval):
     length_of_interval = end_of_interval - start_of_interval
     return random.random() * length_of_interval + start_of_interval
