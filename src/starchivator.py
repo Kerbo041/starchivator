@@ -22,6 +22,7 @@ def main_cycle(values, file_paths, headers):
     print("Packing started")
     while True:
         current_time = datetime.now()
+        
         readed_new_data = get_out_data(
             file_paths["Path_out_0"],
             file_paths["Path_out_1"],

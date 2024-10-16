@@ -1,15 +1,28 @@
 def check_data_array(values_old, values_new, count_of_values=200000):
+    """## _summary_
+        !!!delete count_of_values
+        check length of arrays
+    ### Args:
+        - `values_old (_type_)`: _description_
+        - `values_new (_type_)`: _description_
+        - `count_of_values (int, optional)`: _description_. Defaults to 200000.
+
+    ### Returns:
+        - `_type_`: _description_
+    """
     try:
-        array_of_changed_signals = []
+        changed_values = []
         for i in range(count_of_values):
             if values_old[i] != values_new[i]:
-                array_of_changed_signals.append(
+                
+                changed_values.append(
                     {
                         "Number": i,
                         "Value": values_new[i]["Value"],
                         "Signal": values_new[i]["Signal"],
                     }
                 )
-        return array_of_changed_signals
+        print(changed_values)
+        return changed_values
     except:
         return []
