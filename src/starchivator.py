@@ -8,6 +8,7 @@ from file_write.xdat_file_write import x_dat_file_write
 from data_check.check_data import check_data_array
 from data_check.buffer_data_to_array import buffer_data
 from file_read.out_file_read import get_out_data
+from file_read.out_file_read_buffered import get_out_data_with_buffer
 from config.config import get_config
 from datetime import datetime
 import time
@@ -23,12 +24,18 @@ def main_cycle(values, file_paths, headers):
     while True:
         current_time = datetime.now()
         
-        readed_new_data = get_out_data(
+        readed_new_data = get_out_data_with_buffer(
             file_paths["Path_out_0"],
             file_paths["Path_out_1"],
             analog_count=20000,
             discrete_count=180000,
         )
+        # readed_new_data = get_out_data(
+        #     file_paths["Path_out_0"],
+        #     file_paths["Path_out_1"],
+        #     analog_count=20000,
+        #     discrete_count=180000,
+        # )
 
         changed_values = check_data_array(current_values, readed_new_data)
 
@@ -45,7 +52,7 @@ def main_cycle(values, file_paths, headers):
             special_buffer_signal,
             current_parameter_index,
         )
-
+        print(f"current_values_length is {len(current_values)}")
         out_dat_file_write(
             file_paths["Path_out_dat"],
             current_values,
