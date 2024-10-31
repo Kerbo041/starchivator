@@ -3,13 +3,12 @@
         "Path_out_dat": "c:\\spd3\\dat_py\\out.dat",
         "Path_x_dat": "c:\\spd3\\dat_py\\x.dat",
         "Path_out_0": "c:\\spd3\\out\\out.0",
-        "Path_out_1": "c:\\spd3\\out\\out.1"
+        "Path_out_1": "c:\\spd3\\out\\out.1",
+        "Path_arc_folder": "c:\\spd3\\dat_py\\"
     },
     "HeaderTexts":{
-        "OutDat" : "StarPackOutPyVo3",
-        "XDat" : "StarPackX_PyVo3 ",
-        "OutDatOld" : "StarPackOut_VO3 ",
-        "XDatOld" : "StarPackX___VO3 ",
+        "OutDat" : "StarPackOut_VO3 ",
+        "XDat" : "StarPackX___VO3 ",
         "Archive" : "StarPackArc_VO3 "
     }
 }

@@ -72,29 +72,32 @@ def arrays_join(out_0_file_data, out_1_file_data, analog_count=20000):
 def get_out_data_with_buffer(
     out_0_path, out_1_path, analog_count=20000, discrete_count=180000
 ):
-    time1 = datetime.now()
-    with open(out_0_path, mode="rb") as out_file:
-        with mmap.mmap(
-            out_file.fileno(), length=0, access=mmap.ACCESS_READ
-        ) as out_file_mapped:
-            buffered_out_0_file_data = out_file_mapped.read()
-    time2 = datetime.now()
-    with open(out_1_path, mode="rb") as out_file:
-        with mmap.mmap(
-            out_file.fileno(), length=0, access=mmap.ACCESS_READ
-        ) as out_file_mapped:
-            buffered_out_1_file_data = out_file_mapped.read()
-    time3 = datetime.now()
+    try:
+        time1 = datetime.now()
+        with open(out_0_path, mode="rb") as out_file:
+            with mmap.mmap(
+                out_file.fileno(), length=0, access=mmap.ACCESS_READ
+            ) as out_file_mapped:
+                buffered_out_0_file_data = out_file_mapped.read()
+        time2 = datetime.now()
+        with open(out_1_path, mode="rb") as out_file:
+            with mmap.mmap(
+                out_file.fileno(), length=0, access=mmap.ACCESS_READ
+            ) as out_file_mapped:
+                buffered_out_1_file_data = out_file_mapped.read()
+        time3 = datetime.now()
+    except:
+        return 0
     out_0_file_data = parse_readed_out_file_from_buffer(buffered_out_0_file_data, analog_count)
     out_1_file_data = parse_readed_out_file_from_buffer(buffered_out_1_file_data, discrete_count)
-    print(f"reading time analog is {time2 - time1}")
-    print(f"since {time1}")
-    print(f"to {time2}")
-    print(f"reading time discrete is {time3 - time2}")
-    print(f"since {time2}")
-    print(f"to {time3}")
-    print(f"out0 file len is {len(out_0_file_data)}")
-    print(f"out1 file len is {len(out_1_file_data)}")
+    # print(f"reading time analog is {time2 - time1}")
+    # print(f"since {time1}")
+    # print(f"to {time2}")
+    # print(f"reading time discrete is {time3 - time2}")
+    # print(f"since {time2}")
+    # print(f"to {time3}")
+    # print(f"out0 file len is {len(out_0_file_data)}")
+    # print(f"out1 file len is {len(out_1_file_data)}")
 
     out_0_file_data = fill_values_end_with_empty_lines(out_0_file_data, analog_count)
     out_1_file_data = fill_values_end_with_empty_lines(out_1_file_data, discrete_count)
