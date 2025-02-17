@@ -138,7 +138,7 @@ def start(config_path="C:\\Users\\NOVOSELOV_G\\Documents\\GitHub\\starchivator\\
             current_parameter_index,
             file_paths,
             headers,
-            BLOCK_NUMBER,
+            BLOCK_NUMBER
         )
 
 
