@@ -1,11 +1,12 @@
 from struct import pack, unpack
 from datetime import datetime
 import mmap
+from model.logger import logger
 
 
 def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values=0):
     out_file_data = {}
-    for iter in range(number_of_values-1):
+    for iter in range(number_of_values - 1):
         out_file_line = out_file_buffered_data[iter * 17 : (iter + 1) * 17]
         readed_data = read_out_file_line_from_buffer(out_file_line)
         if readed_data == None:
@@ -13,6 +14,7 @@ def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values=0
         out_file_data[readed_data["Number"]] = {
             "Value": readed_data["Value"],
             "Signal": readed_data["Signal"],
+            "Status": readed_data["Status"],
         }
     return out_file_data
 
@@ -20,14 +22,14 @@ def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values=0
 def read_out_file_line_from_buffer(out_file_line):
     number_in_bytes = out_file_line[0:4]
     if number_in_bytes == b"":
-            return None
+        return None
     number = unpack("<i", number_in_bytes)[0]
     if number == -1:
         return None
     date = out_file_line[4:12]
     value = out_file_line[12:16]
     signal = out_file_line[16:17]
-    return {"Number": number, "Date": date, "Value": value, "Signal": signal}
+    return {"Number": number, "Date": date, "Value": value, "Signal": signal, "Status": True}
 
 
 def get_empty_line():
@@ -37,6 +39,7 @@ def get_empty_line():
         # "Date": b"\x00\x00\x00\x00\x00\x00\x00\x00",
         "Value": b"\xff\xff\xff\xff",
         "Signal": b"\xff",
+        "Status": False
     }
 
 
@@ -80,16 +83,27 @@ def get_out_data_with_buffer(
             ) as out_file_mapped:
                 buffered_out_0_file_data = out_file_mapped.read()
         time2 = datetime.now()
+        logger.logging(
+            f"{out_0_path} was readed successfully, reading time is {time2-time1}"
+        )
         with open(out_1_path, mode="rb") as out_file:
             with mmap.mmap(
                 out_file.fileno(), length=0, access=mmap.ACCESS_READ
             ) as out_file_mapped:
                 buffered_out_1_file_data = out_file_mapped.read()
         time3 = datetime.now()
-    except:
-        return 0
-    out_0_file_data = parse_readed_out_file_from_buffer(buffered_out_0_file_data, analog_count)
-    out_1_file_data = parse_readed_out_file_from_buffer(buffered_out_1_file_data, discrete_count)
+        logger.logging(
+            f"{out_0_path} was readed successfully, reading time is {time3-time2}"
+        )
+    except Exception as exeption:
+        logger.logging(exeption)
+        
+    out_0_file_data = parse_readed_out_file_from_buffer(
+        buffered_out_0_file_data, analog_count
+    )
+    out_1_file_data = parse_readed_out_file_from_buffer(
+        buffered_out_1_file_data, discrete_count
+    )
     # print(f"reading time analog is {time2 - time1}")
     # print(f"since {time1}")
     # print(f"to {time2}")
