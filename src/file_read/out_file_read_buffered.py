@@ -6,7 +6,7 @@ from model.logger import logger
 
 def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values=0):
     out_file_data = {}
-    for iter in range(number_of_values - 1):
+    for iter in range(number_of_values):
         out_file_line = out_file_buffered_data[iter * 17 : (iter + 1) * 17]
         readed_data = read_out_file_line_from_buffer(out_file_line)
         if readed_data == None:
@@ -25,21 +25,27 @@ def read_out_file_line_from_buffer(out_file_line):
         return None
     number = unpack("<i", number_in_bytes)[0]
     if number == -1:
-        return None
+        return get_empty_line()
     date = out_file_line[4:12]
     value = out_file_line[12:16]
     signal = out_file_line[16:17]
-    return {"Number": number, "Date": date, "Value": value, "Signal": signal, "Status": True}
+    return {
+        "Number": number,
+        "Date": date,
+        "Value": value,
+        "Signal": signal,
+        "Status": True,
+    }
 
 
 def get_empty_line():
     return {
-        # "Number": -1,
-        # "NumberInBytes": b"\xff\xff\xff\xff",
-        # "Date": b"\x00\x00\x00\x00\x00\x00\x00\x00",
+         "Number": -1,
+         "NumberInBytes": b"\xff\xff\xff\xff",
+         "Date": b"\xff\xff\xff\xff\xff\xff\xff\xff",
         "Value": b"\xff\xff\xff\xff",
         "Signal": b"\xff",
-        "Status": False
+        "Status": False,
     }
 
 
@@ -93,29 +99,22 @@ def get_out_data_with_buffer(
                 buffered_out_1_file_data = out_file_mapped.read()
         time3 = datetime.now()
         logger.logging(
-            f"{out_0_path} was readed successfully, reading time is {time3-time2}"
+            f"{out_1_path} was readed successfully, reading time is {time3-time2}"
         )
     except Exception as exeption:
-        logger.logging(exeption)
-        
+        logger.logging(str(exeption))
+        return None
+
     out_0_file_data = parse_readed_out_file_from_buffer(
         buffered_out_0_file_data, analog_count
     )
     out_1_file_data = parse_readed_out_file_from_buffer(
         buffered_out_1_file_data, discrete_count
     )
-    # print(f"reading time analog is {time2 - time1}")
-    # print(f"since {time1}")
-    # print(f"to {time2}")
-    # print(f"reading time discrete is {time3 - time2}")
-    # print(f"since {time2}")
-    # print(f"to {time3}")
-    # print(f"out0 file len is {len(out_0_file_data)}")
-    # print(f"out1 file len is {len(out_1_file_data)}")
 
     out_0_file_data = fill_values_end_with_empty_lines(out_0_file_data, analog_count)
     out_1_file_data = fill_values_end_with_empty_lines(out_1_file_data, discrete_count)
 
     out_values = arrays_join(out_0_file_data, out_1_file_data, analog_count)
-
+    logger.logging(f"{out_0_path} and {out_1_path} parsed")
     return out_values
