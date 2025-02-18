@@ -12,7 +12,7 @@ from file_read.out_file_read import get_out_data
 from file_read.out_file_read_buffered import get_out_data_with_buffer
 from datetime import datetime
 from json import load
-
+from model.logger import logger
 
 
 
@@ -38,9 +38,7 @@ def do_archivation_iteration(
     else:
         is_new_day = False
     current_time = new_current_time
-    file_name_archive = (
-        f"{current_time.year}{current_time.month}{current_time.day}.VO{BLOCK_NUMBER}"
-    )
+
 
     readed_new_data = get_out_data_with_buffer(
         file_paths["Path_out_0"],
@@ -48,8 +46,8 @@ def do_archivation_iteration(
         analog_count=20000,
         discrete_count=180000,
     )
-    if readed_new_data == 0:
-        print("EMPTY FILE")
+    if readed_new_data == None:
+        logger.logging(f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with reading")
         return (
             current_values,
             array_of_buffered_parameters,
@@ -89,15 +87,15 @@ def do_archivation_iteration(
 
     archive_file_write(
         file_paths["Path_arc_folder"],
-        file_name_archive,
         headers["Archive"],
         current_values,
         changed_values,
         current_time,
         is_new_hour,
         is_new_day,
+        BLOCK_NUMBER
     )
-
+    logger.logging("\t----- \t successful of one iteration \t -----")
     return (
         current_values,
         array_of_buffered_parameters,
