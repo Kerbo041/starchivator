@@ -1,11 +1,14 @@
 from struct import pack, unpack
 from model.TDateTime import TDateTime
 from datetime import datetime
-
+import os
 
 def x_dat_file_write(
     x_dat_path, array_of_buffer_values, header_text, special_buffer_signal, next_parameter_index
 ):
+    directory_path = os.path.dirname(x_dat_path)
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path, exist_ok=True)
     with open(x_dat_path, "wb") as x_file:
         header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
         write_buffered_values(x_file, array_of_buffer_values)

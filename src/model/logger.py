@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 
-class logger():
+class logger_class():
     
     console_logging_enabled = True
     file_logging_enabled = True
@@ -23,8 +23,8 @@ class logger():
     def file_logging(self, message):
         try:
             if not os.path.exists(self.log_folder_path):
-                os.mkdir(self.log_folder_path, parents=True, exist_ok=True)
-            with open(self.get_log_file_path(), "wb") as log_file:
+                os.makedirs(self.log_folder_path, exist_ok=True)
+            with open(self.get_log_file_path(), "a+") as log_file:
                 print(f'{datetime.now()}:\t{message}', file = log_file)
         except Exception as exeption:
             print(exeption)
@@ -32,3 +32,5 @@ class logger():
     def get_log_file_path(self):
         current_time = datetime.now()
         return f"{self.log_folder_path}/{current_time.year}{current_time.month}{current_time.day}.log"
+    
+logger = logger_class()

@@ -3,8 +3,11 @@ from model.TDateTime import TDateTime
 from datetime import datetime
 from model.logger import logger
 # from src.model.TDateTime import TDateTime
-
+import os
 def out_dat_file_write(out_dat_path, all_values, header_text, special_buffer_signal, values_count=200000):
+    directory_path = os.path.dirname(out_dat_path)
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path, exist_ok=True)
     with open(out_dat_path, "wb") as dat_file:
         header_write(dat_file, header_text, special_buffer_signal)
         write_all_data_to_out_dat(dat_file, all_values, values_count=200000)
