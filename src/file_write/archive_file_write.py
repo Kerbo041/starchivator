@@ -16,9 +16,10 @@ def archive_file_write(
     number_of_all_values=200000,
     number_of_analog_values=20000
 ):
-    file_name_archive = (
-        f"{current_time.year}{current_time.month}{current_time.day}.VO{BLOCK_NUMBER}"
-    )
+    file_name_archive = (f"{current_time.strftime("%Y%m%d")}.VO{BLOCK_NUMBER}")
+    # file_name_archive = (
+    #     f"{current_time.year}{current_time.month}{current_time.day}.VO{BLOCK_NUMBER}"
+    # )
     archive_file_path = os.path.join(folder_path, file_name_archive)
     if not os.path.isdir(folder_path):
         os.makedirs(folder_path, exist_ok=True)
