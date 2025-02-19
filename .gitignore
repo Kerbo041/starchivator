@@ -1,3 +1,7 @@
+#starshivator logs
+logs/
+debug_logs/
+
 #data files for testing
 files/
 test/
