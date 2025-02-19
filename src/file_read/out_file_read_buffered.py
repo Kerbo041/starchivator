@@ -30,8 +30,8 @@ def read_out_file_line_from_buffer(out_file_line):
     value = out_file_line[12:16]
     signal = out_file_line[16:17]
     status = True
-    if date == b"\xff\xff\xff\xff\xff\xff\xff\xff":
-        status = False
+    # if date == b"\xff\xff\xff\xff\xff\xff\xff\xff":
+    #     status = False
     return {
         "Number": number,
         "Date": date,
