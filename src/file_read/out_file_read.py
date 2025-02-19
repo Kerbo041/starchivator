@@ -16,7 +16,7 @@ def read_out_file(out_file_path, number_of_values=0):
                 }
         return out_file_data
     except Exception as exeption:
-        logger.logging(exeption)
+        logger.debug_log(exeption)
         return {iter: get_empty_line() for iter in range(number_of_values)}
 
 
@@ -33,7 +33,7 @@ def read_out_file_line(out_file):
         signal = out_file.read(1)
         return {"Number": number, "Date": date, "Value": value, "Signal": signal}
     except Exception as exeption:
-        logger.logging(exeption)
+        logger.debug_log(exeption)
         return get_empty_line()
 
 

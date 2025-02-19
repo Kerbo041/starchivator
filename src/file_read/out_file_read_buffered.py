@@ -89,7 +89,7 @@ def get_out_data_with_buffer(
             ) as out_file_mapped:
                 buffered_out_0_file_data = out_file_mapped.read()
         time2 = datetime.now()
-        logger.logging(
+        logger.debug_log(
             f"{out_0_path} was readed successfully, reading time is {time2-time1}"
         )
         with open(out_1_path, mode="rb") as out_file:
@@ -98,11 +98,11 @@ def get_out_data_with_buffer(
             ) as out_file_mapped:
                 buffered_out_1_file_data = out_file_mapped.read()
         time3 = datetime.now()
-        logger.logging(
+        logger.debug_log(
             f"{out_1_path} was readed successfully, reading time is {time3-time2}"
         )
     except Exception as exeption:
-        logger.logging(str(exeption))
+        logger.debug_log(str(exeption))
         return None
 
     out_0_file_data = parse_readed_out_file_from_buffer(
@@ -116,5 +116,5 @@ def get_out_data_with_buffer(
     out_1_file_data = fill_values_end_with_empty_lines(out_1_file_data, discrete_count)
 
     out_values = arrays_join(out_0_file_data, out_1_file_data, analog_count)
-    logger.logging(f"{out_0_path} and {out_1_path} parsed")
+    logger.debug_log(f"{out_0_path} and {out_1_path} parsed")
     return out_values

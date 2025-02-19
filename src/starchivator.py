@@ -47,7 +47,7 @@ def do_archivation_iteration(
         discrete_count=180000,
     )
     if readed_new_data == None:
-        logger.logging(f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with reading")
+        logger.any_log(f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with reading")
         return (
             current_values,
             array_of_buffered_parameters,
@@ -95,7 +95,9 @@ def do_archivation_iteration(
         is_new_day,
         BLOCK_NUMBER
     )
-    logger.logging("\t----- \t successful of one iteration \t -----")
+    if len(changed_values) > 0:
+        logger.short_log(f"collected {len(changed_values)} changed parameters")
+    logger.debug_log(f"collected {len(changed_values)} changed parameters")
     return (
         current_values,
         array_of_buffered_parameters,
@@ -105,11 +107,12 @@ def do_archivation_iteration(
     )
 
 
-def start(config_path="C:\\Users\\NOVOSELOV_G\\Documents\\GitHub\\starchivator\\src\\config.json", header_text="StarPack____"):
+def start(config_path="src/config.json", header_text="StarPack____"):
     BLOCK_NUMBER = 3
     config = load(open(config_path, "r"))
     file_paths = config["Paths"]
     headers = config["HeaderTexts"]
+    log_config = config["Logs"]
     current_time = datetime(1, 1, 1)
     special_buffer_signal = 0
     current_parameter_index = 0
@@ -120,6 +123,7 @@ def start(config_path="C:\\Users\\NOVOSELOV_G\\Documents\\GitHub\\starchivator\\
         }
         for i in range(200000)
     }
+    logger.set_log_config(log_config)
     array_of_buffered_parameters = {}
     while True:
         (
