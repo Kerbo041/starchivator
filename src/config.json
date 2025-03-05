@@ -12,7 +12,7 @@
         "Archive": "StarPackArc_VO3 "
     },
     "Logs": {
-        "console_logging_enabled": 0,
+        "console_logging_enabled": 1,
         "file_logging_enabled": 1,
         "debug_logging_enabled": 0,
         "short_logging_enabled": 1,
