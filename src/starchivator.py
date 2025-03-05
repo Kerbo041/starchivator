@@ -95,8 +95,12 @@ def do_archivation_iteration(
         is_new_day,
         BLOCK_NUMBER
     )
+    total_number_of_values = 0
+    for number in current_values:
+        if current_values[number]["Status"] == True:
+            total_number_of_values += 1
     if len(changed_values) > 0:
-        logger.short_log(f"collected {len(changed_values)} changed parameters")
+        logger.short_log(f"changed: {len(changed_values)}, total: {total_number_of_values}")
     logger.debug_log(f"collected {len(changed_values)} changed parameters")
     return (
         current_values,
@@ -120,6 +124,7 @@ def start(config_path="src/config.json", header_text="StarPack____"):
         i: {
             "Value": b"\xff\xff\xff\xff",
             "Signal": b"\xff",
+            "Status": False,
         }
         for i in range(200000)
     }
