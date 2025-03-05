@@ -2,7 +2,7 @@ from struct import pack, unpack
 from datetime import datetime
 import mmap
 from model.logger import logger
-
+from model.technological_parameter import technological_parameter
 
 def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values=0):
     out_file_data = {}
@@ -30,8 +30,8 @@ def read_out_file_line_from_buffer(out_file_line):
     value = out_file_line[12:16]
     signal = out_file_line[16:17]
     status = True
-    # if date == b"\xff\xff\xff\xff\xff\xff\xff\xff":
-    #     status = False
+    if date == b"\xff\xff\xff\xff\xff\xff\xff\xff" or number == b"\xff\xff\xff\xff":
+        status = False
     return {
         "Number": number,
         "Date": date,
@@ -43,9 +43,9 @@ def read_out_file_line_from_buffer(out_file_line):
 
 def get_empty_line():
     return {
-         "Number": -1,
-         "NumberInBytes": b"\xff\xff\xff\xff",
-         "Date": b"\xff\xff\xff\xff\xff\xff\xff\xff",
+        "Number": -1,
+        "NumberInBytes": b"\xff\xff\xff\xff",
+        "Date": b"\xff\xff\xff\xff\xff\xff\xff\xff",
         "Value": b"\xff\xff\xff\xff",
         "Signal": b"\xff",
         "Status": False,
