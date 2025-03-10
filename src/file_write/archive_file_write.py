@@ -24,10 +24,10 @@ def archive_file_write(
         archive_file_path = os.path.join(folder_path, file_name_archive)
         if not os.path.isdir(folder_path):
             os.makedirs(folder_path, exist_ok=True)
-            logger.log("archive folder created")
+            logger.log("archive:\tfolder created")
         if not os.path.isfile(archive_file_path):
             with open(archive_file_path, "wb+") as archive_file:
-                logger.log("archive file created")
+                logger.log("archive:\tfile created")
                 write_header_to_archive_file(
                     archive_file,
                     header_text,
@@ -36,7 +36,7 @@ def archive_file_write(
                     number_of_analog_values,
             )
     except Exception as exception:
-        logger.log(f"error: archvie file creation: {exception}")
+        logger.log(f"error:\tarchvie file creation: {exception}")
 
     try:
         with open(archive_file_path, "rb+") as archive_file:
@@ -55,8 +55,10 @@ def archive_file_write(
                 write_array_of_changed_parameters(
                     archive_file, changed_values, current_time
                 )
+            else:
+                logger.log("archive:\tfile not change" , debug = True)
     except Exception as exception:
-        logger.log(f"error: archvie file writing: {exception}")
+        logger.log(f"error:\tarchvie file writing: {exception}")
 
 def write_header_to_archive_file(
     archive_file,
@@ -74,9 +76,9 @@ def write_header_to_archive_file(
         archive_file.write(b"\xff\xff\xff\xff" * 24)
         archive_file.write(pack("<i", size_of_all_parameters_photo))
         archive_file.write(pack("<i", size_of_analog_values_photo))
-        # logger.log("archive header written", debug = True)
+        logger.log("archive:\theader written", debug = True)
     except Exception as exception:
-        logger.log(f"error: archive header writing: {exception}")
+        logger.log(f"error:\tarchive header writing: {exception}")
 
 
 def set_header_time_of_archive_file(
@@ -86,7 +88,7 @@ def set_header_time_of_archive_file(
         archive_file.seek(16)
         archive_file.write(pack("<d", TDateTime.datetime_to_tdatetime(current_time)))
         archive_file.seek(current_cursor_position)
-        # logger.log("archive header time written", debug = True)
+        logger.log("archive:\theader time written", debug = True)
     except Exception as exception:
         logger.log(f"error: archive file time writing: {exception}")
 
@@ -98,9 +100,9 @@ def set_hour_photo_index_in_header(
         archive_file.seek(24 + 4 * current_time_hour)
         archive_file.write(pack("<i", current_cursor_position))
         archive_file.seek(current_cursor_position)
-        # logger.debug_log("archive hour index added")
+        logger.log("archive:\thour index added", debug = True)
     except Exception as exception:
-        logger.log(f"error: archive file header writing: {exception}")
+        logger.log(f"error:\tarchive file header writing: {exception}")
 
 
 def write_photo_of_all_parameters(archive_file, current_values, current_time):
@@ -110,9 +112,9 @@ def write_photo_of_all_parameters(archive_file, current_values, current_time):
         for value_number in current_values:
             archive_file.write(current_values[value_number]["Value"])
             archive_file.write(current_values[value_number]["Signal"])
-        logger.log("archived hour photo")
+        logger.log("archive:\thour photo")
     except Exception as exception:
-        logger.log(f"error: archive hour photo writing: {exception}")
+        logger.log(f"error:\tarchive hour photo writing: {exception}")
 
 def write_array_of_changed_parameters(archive_file, changed_values, current_time):
     try:
@@ -123,6 +125,6 @@ def write_array_of_changed_parameters(archive_file, changed_values, current_time
             archive_file.write(pack("<i", value["Number"]))
             archive_file.write(value["Value"])
             archive_file.write(value["Signal"])
-        # logger.debug_log(f"archived {len(changed_values)} changed_parameters")
+        logger.log(f"archive:\t{len(changed_values)} changed_parameters", debug = True)
     except Exception as exception:
-        logger.log(f"error: archive changed_parameters writing: {exception}")
+        logger.log(f"error:\tarchive changed_parameters writing: {exception}")
