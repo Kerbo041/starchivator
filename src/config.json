@@ -15,8 +15,6 @@
         "console_logging_enabled": 1,
         "file_logging_enabled": 1,
         "debug_logging_enabled": 0,
-        "short_logging_enabled": 1,
-        "debug_log_folder_path": "debug_logs/",
-        "short_log_folder_path": "logs/"
+        "Path_log_folder_path": "logs/"
     }
 }
