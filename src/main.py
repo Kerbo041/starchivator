@@ -9,7 +9,46 @@ import random
 from model import TDateTime
 from model.logger import logger
 
-def working(config):
+def working(config_path="src/config.json", header_text="StarPack____"):
+    BLOCK_NUMBER = 3
+    config = load(open(config_path, "r"))
+    file_paths = config["Paths"]
+    headers = config["HeaderTexts"]
+    log_config = config["Logs"]
+    current_time = datetime(1, 1, 1)
+    special_buffer_signal = 0
+    current_parameter_index = 0
+    current_values = {
+        i: {
+            "Value": b"\xff\xff\xff\xff",
+            "Signal": b"\xff",
+            "Status": False,
+        }
+        for i in range(200000)
+    }
+    logger.set_log_config(log_config)
+    array_of_buffered_parameters = {}
+    while True:
+        (
+        current_values,
+        array_of_buffered_parameters,
+        current_time,
+        special_buffer_signal,
+        current_parameter_index,
+    ) = starchivator.do_archivation_iteration(
+            current_values,
+            array_of_buffered_parameters,
+            current_time,
+            special_buffer_signal,
+            current_parameter_index,
+            file_paths,
+            headers,
+            BLOCK_NUMBER
+        )
+
+
+
+def work_cycle(config):
     BLOCK_NUMBER = 3
     config = load(open(config_path, "r"))
     file_paths = config["Paths"]

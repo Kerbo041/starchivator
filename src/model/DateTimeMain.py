@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+
 class TDateTime:
     def __init__(self, time_in_datetime: datetime = datetime.now()) -> None:
         self.set_time(time_in_datetime)
