@@ -151,5 +151,3 @@ def start(config_path="src/config.json", header_text="StarPack____"):
             BLOCK_NUMBER
         )
 
-
-start()
