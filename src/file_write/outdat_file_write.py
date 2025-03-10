@@ -17,12 +17,12 @@ def out_dat_file_write(
             os.makedirs(directory_path, exist_ok=True)
         with open(out_dat_path, "wb") as dat_file:
             header_write(dat_file, out_dat_path, header_text, special_buffer_signal)
-            write_all_data_to_out_dat(dat_file, all_values, values_count)
-            logger.debug_log(
-                f"{out_dat_path} written, current sync value is {special_buffer_signal}"
+            write_all_data_to_out_dat(dat_file, all_values, values_count, out_dat_path)
+            logger.log(
+                f"{out_dat_path}\twritten, current sync value is {special_buffer_signal}", debug = True
             )
     except Exception as exception:
-        logger.log(f"error: out.dat writing: {exception}")
+        logger.log(f"error:\tout.dat writing:\t{exception}")
 
 
 
@@ -31,17 +31,18 @@ def header_write(file, out_dat_path, header_text, special_buffer_signal):
         file.write(header_text.encode())
         file.write(pack("<d", TDateTime.datetime_to_tdatetime(datetime.now())))
         file.write(pack("<i", special_buffer_signal))
-        logger.debug_log(f"{out_dat_path} file header written")
+        logger.log(f"{out_dat_path}\tfile header written", debug = True)
     except Exception as exception:
-        logger.log(f"error: out.dat header writing: {exception}")
+        logger.log(f"error:\tout.dat header writing:\t{exception}")
 
 
 
-def write_all_data_to_out_dat(file, all_values, values_count):
+def write_all_data_to_out_dat(file, all_values, values_count, out_dat_path):
     try:
         for i in range(values_count):
             file.write(all_values[i]["Value"])
             file.write(all_values[i]["Signal"])
+        # logger.log("{out_dat_path}\tfile written", debug = True)
     except Exception as exception:
-        logger.log(f"error: out.dat header writing: {exception}")
+        logger.log(f"error:\tout.dat header writing:\t{exception}")
 

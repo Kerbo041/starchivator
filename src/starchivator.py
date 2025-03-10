@@ -104,7 +104,7 @@ def do_archivation_iteration(
             total_number_of_values += 1
     if len(changed_values) > 0:
         logger.log(f"changed: {len(changed_values)}, total: {total_number_of_values}")
-    # logger.log(f"collected {len(changed_values)} changed parameters")
+    logger.log("one archivation iteration done")
     return (
         current_values,
         array_of_buffered_parameters,
