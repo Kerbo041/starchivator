@@ -7,6 +7,7 @@ from file_write.outdat_file_write import out_dat_file_write
 from file_write.xdat_file_write import x_dat_file_write
 from file_write.archive_file_write import archive_file_write
 from data_check.check_data import check_data_array
+from data_check.data_change import data_change
 from data_check.buffer_data_to_array import buffer_data
 from file_read.out_file_read import get_out_data
 from file_read.out_file_read_buffered import get_out_data_with_buffer
@@ -47,7 +48,7 @@ def do_archivation_iteration(
         discrete_count=180000,
     )
     if readed_new_data == None:
-        logger.any_log(f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with reading")
+        logger.log(f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with reading")
         return (
             current_values,
             array_of_buffered_parameters,
@@ -55,7 +56,8 @@ def do_archivation_iteration(
             special_buffer_signal,
             current_parameter_index,
         )
-
+    logger.log(f"{file_paths["Path_out_0"]} and {file_paths["Path_out_1"]} parsed", debug = True)
+    
     changed_values = check_data_array(current_values, readed_new_data)
 
     array_of_buffered_parameters, current_parameter_index, special_buffer_signal = (
@@ -67,8 +69,9 @@ def do_archivation_iteration(
         )
     )
 
-    current_values = readed_new_data
-
+    # current_values = readed_new_data
+    data_change(current_values, readed_new_data)
+    
     x_dat_file_write(
         file_paths["Path_x_dat"],
         array_of_buffered_parameters,
@@ -100,8 +103,8 @@ def do_archivation_iteration(
         if current_values[number]["Status"] == True:
             total_number_of_values += 1
     if len(changed_values) > 0:
-        logger.short_log(f"changed: {len(changed_values)}, total: {total_number_of_values}")
-    logger.debug_log(f"collected {len(changed_values)} changed parameters")
+        logger.log(f"changed: {len(changed_values)}, total: {total_number_of_values}")
+    # logger.log(f"collected {len(changed_values)} changed parameters")
     return (
         current_values,
         array_of_buffered_parameters,
