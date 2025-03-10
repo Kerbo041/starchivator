@@ -9,7 +9,7 @@ import random
 from model import TDateTime
 from model.logger import logger
 
-def working(config_path="src/config.json", header_text="StarPack____"):
+def working(config="src/config.json", header_text="StarPack____"):
     BLOCK_NUMBER = 3
     config = load(open(config_path, "r"))
     file_paths = config["Paths"]
