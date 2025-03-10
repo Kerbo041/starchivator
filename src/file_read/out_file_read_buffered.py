@@ -4,34 +4,41 @@ import mmap
 from model.logger import logger
 from model.technological_parameter import technological_parameter
 
-def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values=0):
-    out_file_data = {}
-    for iter in range(number_of_values):
-        out_file_line = out_file_buffered_data[iter * 17 : (iter + 1) * 17]
-        readed_data = read_out_file_line_from_buffer(out_file_line)
-        if readed_data == None:
-            continue
-        out_file_data[readed_data["Number"]] = {
-            "Value": readed_data["Value"],
-            "Signal": readed_data["Signal"],
-            "Status": readed_data["Status"],
-        }
-    return out_file_data
+def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values, out_file_path):
+    try:
+        out_file_data = {}
+        for iter in range(number_of_values):
+            out_file_line = out_file_buffered_data[iter * 17 : (iter + 1) * 17]
+            readed_data = read_out_file_line_from_buffer(out_file_line)
+            if readed_data == None:
+                continue
+            out_file_data[readed_data["Number"]] = {
+                "Value": readed_data["Value"],
+                "Signal": readed_data["Signal"],
+                "Status": readed_data["Status"],
+            }
+        logger.log(f"readed {len(out_file_data)} from {out_file_path}", debug= True)
+        return out_file_data
+    except Exception as exception:
+        logger.log(f"error: parsing {out_file_path}: {exception}")
+        return None
 
 
 def read_out_file_line_from_buffer(out_file_line):
+    if len(out_file_line) < 17:
+        return None
     number_in_bytes = out_file_line[0:4]
     if number_in_bytes == b"":
         return None
     number = unpack("<i", number_in_bytes)[0]
     if number == -1:
-        return get_empty_line()
+        return None
     date = out_file_line[4:12]
     value = out_file_line[12:16]
     signal = out_file_line[16:17]
     status = True
-    if date == b"\xff\xff\xff\xff\xff\xff\xff\xff" or number == b"\xff\xff\xff\xff":
-        status = False
+    # if date == b"\xff\xff\xff\xff\xff\xff\xff\xff" or number_in_bytes == b"\xff\xff\xff\xff":
+    #     status = False
     return {
         "Number": number,
         "Date": date,
@@ -53,13 +60,17 @@ def get_empty_line():
 
 
 def fill_values_end_with_empty_lines(values, count_of_values):
-    new_values = {}
-    for i in range(count_of_values):
-        if i in values.keys():
-            new_values[i] = values[i]
-        else:
-            new_values[i] = get_empty_line()
-    return new_values
+    try:
+        new_values = {}
+        for i in range(count_of_values):
+            if i in values.keys():
+                new_values[i] = values[i]
+            else:
+                new_values[i] = get_empty_line()
+        return new_values
+    except Exception as exception:
+        logger.log(f"error: {exception}")
+        return None
 
 
 # def fill_values_end_with_empty_lines(values, count_of_values):
@@ -71,15 +82,18 @@ def fill_values_end_with_empty_lines(values, count_of_values):
 
 
 def arrays_join(out_0_file_data, out_1_file_data, analog_count=20000):
-    out_values = {}
-    for analog_value_key in out_0_file_data:
-        out_values[analog_value_key] = out_0_file_data[analog_value_key]
-    for discrete_value_key in out_1_file_data:
-        out_values[analog_count + discrete_value_key] = out_1_file_data[
-            discrete_value_key
-        ]
-    return out_values
-
+    try:
+        out_values = {}
+        for analog_value_key in out_0_file_data:
+            out_values[analog_value_key] = out_0_file_data[analog_value_key]
+        for discrete_value_key in out_1_file_data:
+            out_values[analog_count + discrete_value_key] = out_1_file_data[
+                discrete_value_key
+            ]
+        return out_values
+    except Exception as exception:
+        logger.log(f"error: {exception}")
+        return None
 
 def get_out_data_with_buffer(
     out_0_path, out_1_path, analog_count=20000, discrete_count=180000
@@ -92,32 +106,39 @@ def get_out_data_with_buffer(
             ) as out_file_mapped:
                 buffered_out_0_file_data = out_file_mapped.read()
         time2 = datetime.now()
-        logger.debug_log(
-            f"{out_0_path} was readed successfully, reading time is {time2-time1}"
-        )
+        # logger.debug_log(f"{out_0_path} was readed successfully, reading time is {time2-time1}")
         with open(out_1_path, mode="rb") as out_file:
             with mmap.mmap(
                 out_file.fileno(), length=0, access=mmap.ACCESS_READ
             ) as out_file_mapped:
                 buffered_out_1_file_data = out_file_mapped.read()
         time3 = datetime.now()
-        logger.debug_log(
-            f"{out_1_path} was readed successfully, reading time is {time3-time2}"
-        )
+        # logger.log(f"{out_1_path} was readed successfully, reading time is {time3-time2}", debug = True)
     except Exception as exeption:
-        logger.debug_log(str(exeption))
+        logger.debug_log(f"file reading: {exeption}")
         return None
 
     out_0_file_data = parse_readed_out_file_from_buffer(
-        buffered_out_0_file_data, analog_count
+        buffered_out_0_file_data, analog_count, out_0_path
     )
     out_1_file_data = parse_readed_out_file_from_buffer(
-        buffered_out_1_file_data, discrete_count
+        buffered_out_1_file_data, discrete_count, out_1_path
     )
-
+    
+    if out_0_file_data == None or out_1_file_data == None:
+        return None
+    
     out_0_file_data = fill_values_end_with_empty_lines(out_0_file_data, analog_count)
     out_1_file_data = fill_values_end_with_empty_lines(out_1_file_data, discrete_count)
 
+    if out_0_file_data == None or out_1_file_data == None:
+        return None
+    
     out_values = arrays_join(out_0_file_data, out_1_file_data, analog_count)
-    logger.debug_log(f"{out_0_path} and {out_1_path} parsed")
+    
+    if out_values == None:
+        return None
+
     return out_values
+
+

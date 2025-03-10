@@ -27,5 +27,5 @@ def buffer_data(
         else:
             buffer_array[current_parameter_index] = value
             current_parameter_index += 1
-    logger.debug_log(f"array of changed values has length {len(changed_values)}")
+    # logger.debug_log(f"array of changed values has length {len(changed_values)}")
     return buffer_array, current_parameter_index, special_buffer_signal
