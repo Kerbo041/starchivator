@@ -1,6 +1,6 @@
 from struct import pack, unpack
 from datetime import datetime
-import mmap
+# import mmap
 from model.logger import logger
 from model.technological_parameter import technological_parameter
 
@@ -101,17 +101,19 @@ def get_out_data_with_buffer(
     try:
         time1 = datetime.now()
         with open(out_0_path, mode="rb") as out_file:
-            with mmap.mmap(
-                out_file.fileno(), length=0, access=mmap.ACCESS_READ
-            ) as out_file_mapped:
-                buffered_out_0_file_data = out_file_mapped.read()
+            buffered_out_0_file_data = out_file.read()
+            # with mmap.mmap(
+            #     out_file.fileno(), length=0, access=mmap.ACCESS_READ
+            # ) as out_file_mapped:
+            #     buffered_out_0_file_data = out_file_mapped.read()
         time2 = datetime.now()
         # logger.debug_log(f"{out_0_path} was readed successfully, reading time is {time2-time1}")
         with open(out_1_path, mode="rb") as out_file:
-            with mmap.mmap(
-                out_file.fileno(), length=0, access=mmap.ACCESS_READ
-            ) as out_file_mapped:
-                buffered_out_1_file_data = out_file_mapped.read()
+            buffered_out_1_file_data = out_file.read()
+            # with mmap.mmap(
+            #     out_file.fileno(), length=0, access=mmap.ACCESS_READ
+            # ) as out_file_mapped:
+            #     buffered_out_1_file_data = out_file_mapped.read()
         time3 = datetime.now()
         # logger.log(f"{out_1_path} was readed successfully, reading time is {time3-time2}", debug = True)
     except Exception as exeption:
