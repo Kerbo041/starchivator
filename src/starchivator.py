@@ -16,17 +16,16 @@ from json import load
 from model.logger import logger
 
 
-
-
 def do_archivation_iteration(
-            current_values,
-            array_of_buffered_parameters,
-            current_time,
-            special_buffer_signal,
-            current_parameter_index,
-            file_paths,
-            headers,
-            BLOCK_NUMBER,
+    current_values,
+    array_of_buffered_parameters,
+    current_time,
+    special_buffer_signal,
+    current_parameter_index,
+    file_paths,
+    headers,
+    BLOCK_NUMBER,
+    old_total_number_of_values
 ):
 
     new_current_time = datetime.now()
@@ -40,7 +39,6 @@ def do_archivation_iteration(
         is_new_day = False
     current_time = new_current_time
 
-
     readed_new_data = get_out_data_with_buffer(
         file_paths["Path_out_0"],
         file_paths["Path_out_1"],
@@ -48,16 +46,38 @@ def do_archivation_iteration(
         discrete_count=180000,
     )
     if readed_new_data == None:
-        logger.log(f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with reading")
+        logger.log(
+            f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with reading"
+        )
         return (
             current_values,
             array_of_buffered_parameters,
             current_time,
             special_buffer_signal,
             current_parameter_index,
+            old_total_number_of_values
         )
-    logger.log(f"{file_paths["Path_out_0"]} and {file_paths["Path_out_1"]} parsed", debug = True)
+
+    total_number_of_values = 0
+    for number in current_values:
+        if readed_new_data[number]["Status"] == True:
+            total_number_of_values += 1
+    if old_total_number_of_values > total_number_of_values:
+        old_total_number_of_values = total_number_of_values
+        logger.log(f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with number of params")
+        return (
+            current_values,
+            array_of_buffered_parameters,
+            current_time,
+            special_buffer_signal,
+            current_parameter_index,
+            old_total_number_of_values)
+    old_total_number_of_values = total_number_of_values
     
+    logger.log(
+        f"{file_paths["Path_out_0"]} and {file_paths["Path_out_1"]} parsed", debug=True
+    )
+
     changed_values = check_data_array(current_values, readed_new_data)
 
     array_of_buffered_parameters, current_parameter_index, special_buffer_signal = (
@@ -71,7 +91,7 @@ def do_archivation_iteration(
 
     # current_values = readed_new_data
     data_change(current_values, readed_new_data)
-    
+
     x_dat_file_write(
         file_paths["Path_x_dat"],
         array_of_buffered_parameters,
@@ -111,6 +131,7 @@ def do_archivation_iteration(
         current_time,
         special_buffer_signal,
         current_parameter_index,
+        old_total_number_of_values
     )
 
 
@@ -132,15 +153,18 @@ def start(config_path="src/config.json", header_text="StarPack____"):
         for i in range(200000)
     }
     logger.set_log_config(log_config)
+    logger.set_default_log_folder_path(__file__)
     array_of_buffered_parameters = {}
+    old_total_number_of_values = 0
     while True:
         (
-        current_values,
-        array_of_buffered_parameters,
-        current_time,
-        special_buffer_signal,
-        current_parameter_index,
-    ) = do_archivation_iteration(
+            current_values,
+            array_of_buffered_parameters,
+            current_time,
+            special_buffer_signal,
+            current_parameter_index,
+            old_total_number_of_values
+        ) = do_archivation_iteration(
             current_values,
             array_of_buffered_parameters,
             current_time,
@@ -148,7 +172,8 @@ def start(config_path="src/config.json", header_text="StarPack____"):
             current_parameter_index,
             file_paths,
             headers,
-            BLOCK_NUMBER
+            BLOCK_NUMBER,
+            old_total_number_of_values
         )
 
 
