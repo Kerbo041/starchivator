@@ -1,7 +1,7 @@
 from model.TDateTime import TDateTime
 
 
-class technological_parameter:
+class TechnologicalParameter:
 
     def __init__(
         self,
