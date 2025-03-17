@@ -2,7 +2,7 @@ from struct import pack, unpack
 from datetime import datetime
 # import mmap
 from model.logger import logger
-from model.technological_parameter import technological_parameter
+from model.TechnologicalParameter import technological_parameter
 
 def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values, out_file_path):
     try:
