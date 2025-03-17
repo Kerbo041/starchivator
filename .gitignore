@@ -1,14 +1,15 @@
-<<<<<<< Updated upstream
-=======
+#starshivator logs
+logs/
+debug_logs/
+
 #data files for testing
 files/
-decoded_files/
-src/test/
+test/
+helper/
 #code for decode .vo2
 old_code/
 
 
->>>>>>> Stashed changes
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

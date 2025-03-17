@@ -1,0 +1,20 @@
+{
+    "Paths": {
+        "Path_out_dat": "c:\\spd3\\dat_py\\out.dat",
+        "Path_x_dat": "c:\\spd3\\dat_py\\x.dat",
+        "Path_out_0": "c:\\spd3\\out\\out.0",
+        "Path_out_1": "c:\\spd3\\out\\out.1",
+        "Path_arc_folder": "c:\\spd3\\dat_py\\"
+    },
+    "HeaderTexts": {
+        "OutDat": "StarPackOut_VO3 ",
+        "XDat": "StarPackX___VO3 ",
+        "Archive": "StarPackArc_VO3 "
+    },
+    "Logs": {
+        "console_logging_enabled": 1,
+        "file_logging_enabled": 1,
+        "debug_logging_enabled": 0,
+        "Path_log_folder_path": "logs\\"
+    }
+}
