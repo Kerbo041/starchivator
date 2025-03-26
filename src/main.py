@@ -13,6 +13,11 @@ def working(config="src/config.json", header_text="StarPack____"):
     BLOCK_NUMBER = 3
     config = load(open(config_path, "r"))
     file_paths = config["Paths"]
+    file_paths["DefaultPath_out_dat"] = os.path.join(file_dir, "out.dat")
+    file_paths["DefaultPath_x_dat"] = os.path.join(file_dir, "x.dat")
+    file_paths["DefaultPath_out_0"] = os.path.join(file_dir, "out.0")
+    file_paths["DefaultPath_out_1"] = os.path.join(file_dir, "out.1")
+    file_paths["DefaultPath_arc_folder"] = os.path.join(file_dir, "arc\\")
     headers = config["HeaderTexts"]
     log_config = config["Logs"]
     current_time = datetime(1, 1, 1)
@@ -28,6 +33,7 @@ def working(config="src/config.json", header_text="StarPack____"):
     }
     logger.set_log_config(log_config)
     array_of_buffered_parameters = {}
+    old_total_number_of_values= 0
     while True:
         (
         current_values,
@@ -35,6 +41,7 @@ def working(config="src/config.json", header_text="StarPack____"):
         current_time,
         special_buffer_signal,
         current_parameter_index,
+        old_total_number_of_values
     ) = starchivator.do_archivation_iteration(
             current_values,
             array_of_buffered_parameters,
@@ -43,7 +50,7 @@ def working(config="src/config.json", header_text="StarPack____"):
             current_parameter_index,
             file_paths,
             headers,
-            BLOCK_NUMBER
+            BLOCK_NUMBER, old_total_number_of_values
         )
 
 
