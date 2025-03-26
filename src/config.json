@@ -1,10 +1,10 @@
 {
     "Paths": {
-        "Path_out_dat": "/usr/local/src/sg/src/files/out.dat",
-        "Path_x_dat": "/usr/local/src/sg/src/files/x.dat",
-        "Path_out_0": "/usr/local/src/sg/src/files/out.0",
-        "Path_out_1": "/usr/local/src/sg/src/files/out.1",
-        "Path_arc_folder": "/usr/local/src/sg/src/files/arc/"
+        "Path_out_dat": "/media/sf_samba/files_out/out.dat",
+        "Path_x_dat": "/media/sf_samba/files_out/x.dat",
+        "Path_out_0": "/media/sf_samba/files/out.0",
+        "Path_out_1": "/media/sf_samba/files/out.1",
+        "Path_arc_folder": "/media/sf_samba/files_out/"
     },
     "HeaderTexts": {
         "OutDat": "StarPackOut_VO3 ",
