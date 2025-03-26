@@ -21,7 +21,10 @@ def x_dat_file_write(
                 header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
                 write_buffered_values(x_file, array_of_buffer_values)
                 if remove_file:
-                    os.remove(x_dat_path)
+                    try:
+                        os.remove(x_dat_path)
+                    except:
+                        pass
                 copy2(default_x_dat_path, x_dat_path)
         else:
             with open(x_dat_path, "wb") as x_file:
