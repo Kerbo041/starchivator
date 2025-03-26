@@ -19,8 +19,9 @@ def out_dat_file_write(
             default_directory_path = os.path.dirname(default_out_dat_path)
             if not os.path.exists(default_directory_path):
                 os.makedirs(directory_path, exist_ok=True)
-            with open(default_out_dat_path, "wb") as x_file:
-                
+            with open(default_out_dat_path, "wb") as dat_file:
+                header_write(dat_file, default_out_dat_path, header_text, special_buffer_signal)
+                write_all_data_to_out_dat(dat_file, all_values, values_count, default_out_dat_path)
                 if remove_file:
                     os.remove(out_dat_path)
                 copy2(default_out_dat_path, out_dat_path)
