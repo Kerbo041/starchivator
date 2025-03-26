@@ -3,17 +3,30 @@ from model.TDateTime import TDateTime
 from datetime import datetime
 import os
 from model.logger import logger
-
+from shutil import copy2
 def x_dat_file_write(
-    x_dat_path, array_of_buffer_values, header_text, special_buffer_signal, next_parameter_index
+    x_dat_path, default_x_dat_path, array_of_buffer_values, header_text, special_buffer_signal, next_parameter_index, copy_file = False, remove_file = False
 ):
     try:
         directory_path = os.path.dirname(x_dat_path)
         if not os.path.exists(directory_path):
             os.makedirs(directory_path, exist_ok=True)
-        with open(x_dat_path, "wb") as x_file:
-            header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
-            write_buffered_values(x_file, array_of_buffer_values)
+        
+        if copy_file:
+            default_directory_path = os.path.dirname(default_x_dat_path)
+            if not os.path.exists(default_directory_path):
+                os.makedirs(default_directory_path, exist_ok=True)
+            
+            with open(default_x_dat_path, "wb") as x_file:
+                header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
+                write_buffered_values(x_file, array_of_buffer_values)
+                if remove_file:
+                    os.remove(x_dat_path)
+                copy2(default_x_dat_path, x_dat_path)
+        else:
+            with open(x_dat_path, "wb") as x_file:
+                header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
+                write_buffered_values(x_file, array_of_buffer_values)
         # logger.debug_log(f"{x_dat_path} written, current size is {next_parameter_index}, current sync value is {special_buffer_signal}")
         
         logger.log(f"{x_dat_path}\t file written, current size is {next_parameter_index}, current sync value is {special_buffer_signal}", debug = True)
