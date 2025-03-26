@@ -13,6 +13,8 @@ def working(config="src/config.json", header_text="StarPack____"):
     BLOCK_NUMBER = 3
     config = load(open(config_path, "r"))
     file_paths = config["Paths"]
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_dir = os.path.join(script_dir, "files\\")
     file_paths["DefaultPath_out_dat"] = os.path.join(file_dir, "out.dat")
     file_paths["DefaultPath_x_dat"] = os.path.join(file_dir, "x.dat")
     file_paths["DefaultPath_out_0"] = os.path.join(file_dir, "out.0")
