@@ -56,41 +56,16 @@ def do_archivation_iteration(
         copy_file=copy_files
     )
     if readed_new_data == None:
-        logger.log(
-            f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with reading"
-        )
+        logger.log("{file_paths[Path_out_0]}, {file_paths[Path_out_1]}: error with reading")
         return (
             current_values,
             array_of_buffered_parameters,
             current_time,
             special_buffer_signal,
             current_parameter_index,
-            old_total_number_of_values,
         )
-
-    total_number_of_values = 0
-    for number in current_values:
-        if readed_new_data[number]["Status"] == True:
-            total_number_of_values += 1
-    if old_total_number_of_values > total_number_of_values:
-        old_total_number_of_values = total_number_of_values
-        logger.log(
-            f"{file_paths["Path_out_0"]}, {file_paths["Path_out_1"]}: error with number of params"
-        )
-        return (
-            current_values,
-            array_of_buffered_parameters,
-            current_time,
-            special_buffer_signal,
-            current_parameter_index,
-            old_total_number_of_values,
-        )
-    old_total_number_of_values = total_number_of_values
-
-    logger.log(
-        f"{file_paths["Path_out_0"]} and {file_paths["Path_out_1"]} parsed", debug=True
-    )
-
+    logger.log("{file_paths[Path_out_0]} and {file_paths[Path_out_1]} parsed", debug = True)
+    
     changed_values = check_data_array(current_values, readed_new_data)
 
     array_of_buffered_parameters, current_parameter_index, special_buffer_signal = (
@@ -116,7 +91,7 @@ def do_archivation_iteration(
         copy_file=copy_files,
         remove_file= remove_files
     )
-    # print(f"current_values_length is {len(current_values)}")
+    # print("current_values_length is {len(current_values)}")
     out_dat_file_write(
         file_paths["Path_out_dat"],
         file_paths["DefaultPath_out_dat"],
@@ -145,7 +120,7 @@ def do_archivation_iteration(
         if current_values[number]["Status"] == True:
             total_number_of_values += 1
     if len(changed_values) > 0:
-        logger.log(f"changed: {len(changed_values)}, total: {total_number_of_values}")
+        logger.log("changed: {len(changed_values)}, total: {total_number_of_values}")
     logger.log("one archivation iteration done")
     time.sleep(0.5)
     return (
