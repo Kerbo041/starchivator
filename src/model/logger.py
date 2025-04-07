@@ -58,7 +58,7 @@ class logger:
 
     def get_log_file_path():
         current_time = datetime.now()
-        log_file_name = f"{current_time.strftime("%Y%m%d")}.log"
+        log_file_name = str(current_time.strftime("%Y%m%d")) + ".log"
         # return f"{logger.log_folder_path}/log_{current_time.year}{current_time.month}{current_time.day}.log"
         return  os.path.join(logger.log_folder_path, log_file_name)
 
