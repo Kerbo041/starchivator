@@ -17,7 +17,7 @@ def x_dat_file_write(
             if not os.path.exists(default_directory_path):
                 os.makedirs(default_directory_path, exist_ok=True)
             
-            with open(default_x_dat_path, "wb") as x_file:
+            with open(default_x_dat_path, "rb+") as x_file:
                 header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
                 write_buffered_values(x_file, array_of_buffer_values)
                 if remove_file:
@@ -27,7 +27,7 @@ def x_dat_file_write(
                         pass
                 copy2(default_x_dat_path, x_dat_path)
         else:
-            with open(x_dat_path, "wb") as x_file:
+            with open(x_dat_path, "rb+") as x_file:
                 header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
                 write_buffered_values(x_file, array_of_buffer_values)
         # logger.debug_log(f"{x_dat_path} written, current size is {next_parameter_index}, current sync value is {special_buffer_signal}")
