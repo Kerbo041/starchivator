@@ -40,10 +40,10 @@ class logger:
 
     def console_logging(message, disposable = False, default_file_path_logging = False):
         try:
-            print("{datetime.now()}:\t{message}")
+            print(f"{datetime.now()}:\t{message}")
         except Exception as exception:
             if not disposable:
-                logger.log("console logging error: {exception}", debug= False, disposable=True)
+                logger.log(f"console logging error: {exception}", debug= False, disposable=True)
 
     def file_logging(message, file_path, disposable = False):
         try:
@@ -51,11 +51,30 @@ class logger:
             if not os.path.isdir(log_directory_path):
                 os.makedirs(log_directory_path, exist_ok=True)
             with open(file_path, "a+") as log_file:
-                print("{datetime.now()}:\t{message}", file=log_file)
+                print(f"{datetime.now()}:\t{message}", file=log_file)
         except Exception as exception:
             if not disposable:
-                logger.log("file logging error: {exception}", debug= False, disposable=True)
+                logger.log(message, debug= False, disposable=True, default_file_path_logging = True)
+                logger.log(f"file logging error: {exception}", debug= False, disposable=True, default_file_path_logging = True)
 
+    # def default_path_file_logging(message, disposable = False):
+    #     try:
+    #         log_directory_path = logger.default_log_folder_path
+    #         if not os.path.isdir(log_directory_path):
+    #             os.makedirs(log_directory_path, exist_ok=True)
+    #         with open(os.path.join(logger.default_log_folder_path,logger.get_log_file_path()), "a+") as log_file:
+    #             print(f"{datetime.now()}:\t{message}", file=log_file)
+    #     except Exception as exception:
+    #         if not disposable:
+    #             logger.log(f"file logging error: {exception}", debug= False, disposable=True, default_file_path_logging = True)
+
+    
+    def get_default_log_file_path():
+        current_time = datetime.now()
+        # file_name = f"{logger.log_folder_path}/log_{current_time.year}{current_time.month}{current_time.day}.log"
+        file_name = (f"{current_time.strftime("%Y%m%d")}.log")
+        return os.path.join(logger.default_log_folder_path, file_name)
+    
     def get_log_file_path():
         current_time = datetime.now()
         log_file_name = str(current_time.strftime("%Y%m%d")) + ".log"

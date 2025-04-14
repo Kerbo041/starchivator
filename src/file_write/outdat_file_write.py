@@ -37,7 +37,7 @@ def out_dat_file_write(
             )
             # logger.log("")
     except Exception as exception:
-        logger.log("error:\tout.dat writing:\t{exception}")
+        logger.log(f"error:\tout.dat writing:\t{exception}")
 
 
 
@@ -47,9 +47,9 @@ def header_write(file, out_dat_path, header_text, special_buffer_signal):
         file.write(header_text.encode())
         file.write(pack("<d", TDateTime.datetime_to_tdatetime(datetime.now())))
         file.write(pack("<i", special_buffer_signal))
-        logger.log("{out_dat_path}\tfile header written", debug = True)
+        logger.log(f"{out_dat_path}\tfile header written", debug = True)
     except Exception as exception:
-        logger.log("error:\tout.dat header writing:\t{exception}")
+        logger.log(f"error:\tout.dat header writing:\t{exception}")
 
 
 
@@ -61,5 +61,5 @@ def write_all_data_to_out_dat(file, all_values, values_count, out_dat_path):
             file.write(all_values[i]["Signal"])
         # logger.log("{out_dat_path}\tfile written", debug = True)
     except Exception as exception:
-        logger.log("error:\tout.dat header writing:\t{exception}")
+        logger.log(f"error:\tout.dat header writing:\t{exception}")
 

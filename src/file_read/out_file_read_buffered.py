@@ -17,10 +17,10 @@ def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values, 
                 "Signal": readed_data["Signal"],
                 "Status": readed_data["Status"],
             }
-        logger.log("readed {len(out_file_data)} from {out_file_path}", debug= True)
+        logger.log(f"readed {len(out_file_data)} from {out_file_path}", debug= True)
         return out_file_data
     except Exception as exception:
-        logger.log("error: parsing {out_file_path}: {exception}")
+        logger.log(f"error: parsing {out_file_path}: {exception}")
         return None
 
 
@@ -69,7 +69,7 @@ def fill_values_end_with_empty_lines(values, count_of_values):
                 new_values[i] = get_empty_line()
         return new_values
     except Exception as exception:
-        logger.log("error: {exception}")
+        logger.log(f"error: {exception}")
         return None
 
 
@@ -92,7 +92,7 @@ def arrays_join(out_0_file_data, out_1_file_data, analog_count=20000):
             ]
         return out_values
     except Exception as exception:
-        logger.log("error: {exception}")
+        logger.log(f"error: {exception}")
         return None
 
 def get_out_data_with_buffer(
@@ -119,7 +119,7 @@ def get_out_data_with_buffer(
                 buffered_out_1_file_data = out_file.read()
 
     except Exception as exeption:
-        logger.debug_log("file reading: {exeption}")
+        logger.debug_log(f"file reading: {exeption}")
         return None
 
     out_0_file_data = parse_readed_out_file_from_buffer(

@@ -19,7 +19,7 @@ def archive_file_write(
     copy_file = False
 ):
     try:
-        file_name_archive = str(current_time.strftime("%Y%m%d")) + ".VO" + str(BLOCK_NUMBER)
+        file_name_archive = (f"{current_time.strftime("%Y%m%d")}.VO{BLOCK_NUMBER}")
         # file_name_archive = (
         #     f"{current_time.year}{current_time.month}{current_time.day}.VO{BLOCK_NUMBER}"
         # )
@@ -56,7 +56,7 @@ def archive_file_write(
                         number_of_analog_values,
                 )
     except Exception as exception:
-        logger.log("error:\tarchvie file creation: {exception}")
+        logger.log(f"error:\tarchvie file creation: {exception}")
 
     try:
         if copy_file:
@@ -99,7 +99,7 @@ def archive_file_write(
                 else:
                     logger.log("archive:\tfile not change" , debug = True)
     except Exception as exception:
-        logger.log("error:\tarchvie file writing: {exception}")
+        logger.log(f"error:\tarchvie file writing: {exception}")
 
 def write_header_to_archive_file(
     archive_file,
@@ -119,7 +119,7 @@ def write_header_to_archive_file(
         archive_file.write(pack("<i", size_of_analog_values_photo))
         logger.log("archive:\theader written", debug = True)
     except Exception as exception:
-        logger.log("error:\tarchive header writing: {exception}")
+        logger.log(f"error:\tarchive header writing: {exception}")
 
 
 def set_header_time_of_archive_file(
@@ -131,7 +131,7 @@ def set_header_time_of_archive_file(
         archive_file.seek(current_cursor_position)
         logger.log("archive:\theader time written", debug = True)
     except Exception as exception:
-        logger.log("error: archive file time writing: {exception}")
+        logger.log(f"error: archive file time writing: {exception}")
 
 
 def set_hour_photo_index_in_header(
@@ -143,7 +143,7 @@ def set_hour_photo_index_in_header(
         archive_file.seek(current_cursor_position)
         logger.log("archive:\thour index added", debug = True)
     except Exception as exception:
-        logger.log("error:\tarchive file header writing: {exception}")
+        logger.log(f"error:\tarchive file header writing: {exception}")
 
 
 def write_photo_of_all_parameters(archive_file, current_values, current_time):
@@ -155,7 +155,7 @@ def write_photo_of_all_parameters(archive_file, current_values, current_time):
             archive_file.write(current_values[value_number]["Signal"])
         logger.log("archive:\thour photo")
     except Exception as exception:
-        logger.log("error:\tarchive hour photo writing: {exception}")
+        logger.log(f"error:\tarchive hour photo writing: {exception}")
 
 def write_array_of_changed_parameters(archive_file, changed_values, current_time):
     try:
@@ -166,6 +166,6 @@ def write_array_of_changed_parameters(archive_file, changed_values, current_time
             archive_file.write(pack("<i", value["Number"]))
             archive_file.write(value["Value"])
             archive_file.write(value["Signal"])
-        logger.log("archive:\t{len(changed_values)} changed_parameters", debug = True)
+        logger.log(f"archive:\t{len(changed_values)} changed_parameters", debug = True)
     except Exception as exception:
-        logger.log("error:\tarchive changed_parameters writing: {exception}")
+        logger.log(f"error:\tarchive changed_parameters writing: {exception}")
