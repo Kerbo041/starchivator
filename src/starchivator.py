@@ -31,8 +31,8 @@ def do_archivation_iteration(
 ):
     
     
-    copy_files = True
-    remove_files = True
+    copy_files = False
+    remove_files = False
     
     
     new_current_time = datetime.now()
