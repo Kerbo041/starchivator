@@ -35,6 +35,7 @@ def out_dat_file_write(
         logger.log(
                 f"{out_dat_path}\twritten, current sync value is {special_buffer_signal}", debug = True
             )
+            # logger.log("")
     except Exception as exception:
         logger.log("error:\tout.dat writing:\t{exception}")
 
@@ -42,6 +43,7 @@ def out_dat_file_write(
 
 def header_write(file, out_dat_path, header_text, special_buffer_signal):
     try:
+        file.seek(0)
         file.write(header_text.encode())
         file.write(pack("<d", TDateTime.datetime_to_tdatetime(datetime.now())))
         file.write(pack("<i", special_buffer_signal))
@@ -53,6 +55,7 @@ def header_write(file, out_dat_path, header_text, special_buffer_signal):
 
 def write_all_data_to_out_dat(file, all_values, values_count, out_dat_path):
     try:
+        file.seek(28)
         for i in range(values_count):
             file.write(all_values[i]["Value"])
             file.write(all_values[i]["Signal"])

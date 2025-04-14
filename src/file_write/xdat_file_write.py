@@ -41,6 +41,7 @@ def header_write(
     file, header_text: str, special_buffer_signal: int, next_parameter_index: int
 ):
     try:
+        file.seek(0)
         file.write(header_text.encode())
         file.write(pack("<d", TDateTime.datetime_to_tdatetime(datetime.now())))
         file.write(pack("<i", special_buffer_signal))
