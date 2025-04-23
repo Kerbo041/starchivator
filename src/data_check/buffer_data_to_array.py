@@ -1,4 +1,4 @@
-from model.logger import logger
+from model.Logger import Logger
 
 def buffer_data(
     buffer_array,

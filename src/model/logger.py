@@ -16,14 +16,14 @@ class Log:
             self.message = str(message)
         except Exception as exception:
             self.message = ""
-            logger.log(exception, debug=False, disposable=True)
+            Logger.log(exception, debug=False, disposable=True)
 
     def __str__(self):
         return str(self.time) + ": " + self.message
         
 
 
-class logger:
+class Logger:
 
     console_logging_enabled = True
     file_logging_enabled = True

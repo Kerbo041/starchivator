@@ -1,40 +1,40 @@
 from model.TDateTime import TDateTime
 from struct import pack, unpack
-from model.logger import logger
+from model.Logger import Logger
+from datetime import datetime
+
+
 class TechnologicalParameter:
-
-
     # region Init
-    
+
     def __init__(
         self,
         number=-1,
-        time_in_TDateTime=b"\xff\xff\xff\xff\xff\xff\xff\xff",
-        time = None,
+        time=None,
         value=b"\xff\xff\xff\xff",
         signal=b"\xff",
-        state=False,
-        logger = None
     ):
         self.set_number(number)
-        self.time = time
-        self.value = value
-        self.signal = signal
-        self.state = state
-        
+        self.set_time(time)
+        self.set_value(value)
+        self.set_signal(signal)
+        self.state = self.check_state()
+
     # endregion
-    
+
     # region Setters
-    
+
     def set_number(self, number):
         if number is not None:
             if type(number) is int:
                 self.number = number
-            elif (type(number) is bytearray or type(number) is bytes) and len(number) == 4:
+            elif (type(number) is bytearray or type(number) is bytes) and len(
+                number
+            ) == 4:
                 self.number = unpack("<i", number)
         else:
             self.number = -1
-    
+
     def set_value(self, value):
         if value is not None:
             if (type(value) is bytearray or type(value) is bytes) and len(value) == 8:
@@ -42,65 +42,84 @@ class TechnologicalParameter:
             else:
                 self.value = b"\xff\xff\xff\xff\xff\xff\xff\xff"
         else:
-            self.value = b"\xff\xff\xff\xff\xff\xff\xff\xff" 
+            self.value = b"\xff\xff\xff\xff\xff\xff\xff\xff"
 
     def set_signal(self, signal):
-        self.signal = signal
-    
-    def set_time_in_datetime(self, time):
-        self.time = time
-        self.time_in_TDateTime = TDateTime.datetime_to_tdatetime(self.time)
-        self.time_in_TDateTime_in_bytes = pack("<d", self.time_in_TDateTime)
+        if (
+            signal is not None
+            and (type(signal) is bytearray or type(signal) is bytes)
+            and len(signal) == 1
+        ):
+            self.signal = signal
+
+    def set_time(self, time):
+        if type(time) == datetime:
+            self.time = time
+        elif type(time) == float:
+            self.time = TDateTime.tdatetime_to_datetime(self.time)
+        elif (type(time) == bytearray or type(time)) == bytes and len(time) == 8:
+            self.time = TDateTime.tdatetime_to_datetime(unpack("<d", time))
 
     # endregion
-    
+
     # region Getters
-    
+
     def get_time(self):
         return self.time
-    
+
     def get_time_in_tdatetime(self):
         return TDateTime.datetime_to_tdatetime(self.time)
-    
+
     def get_value(self):
         return self.value
-    
+
     def get_number(self):
         return self.number
-    
+
     def get_number_in_bytes(self):
         return pack("<i", self.number)
-    
+
     def get_state(self):
-        return self.state
-    
+        return self.check_state()
+
     # endregion
-    
+
     # region Checkers
-    
-    def check_number(self):
-        if self.number != -1 and self.number >= 0:
-            return True
-        
-    def check_value(self):
-        if self.value is not None and (type(self.value) == bytes or type(self.value) == bytearray):
+
+    def __eq__(self, parameter):
+        if type(parameter) == type(self) and (
+            self.number == parameter.number
+            and self.time == parameter.time
+            and self.value == parameter.value
+            and self.signal == parameter.signal
+        ):
             return True
         else:
             return False
-    
+
+    def check_number(self):
+        if self.number != -1 and self.number >= 0:
+            return True
+
+    def check_value(self):
+        if self.value is not None and (
+            type(self.value) == bytes or type(self.value) == bytearray
+        ):
+            return True
+        else:
+            return False
+
     def check_state(self):
         if self.check_number() and self.check_value():
             self.state = True
         else:
             self.state = False
-    
+
     # endregion
-    
+
     # region Creation
-    
-    
-    
-    def get_technological_parameter_from_bytes(self, bytes_array:bytearray):
+
+    def get_technological_parameter_from_bytes(self, bytes_array: bytearray):
         try:
             if len(bytes_array) < 17:
                 return None
@@ -110,12 +129,11 @@ class TechnologicalParameter:
             number = unpack("<i", number_in_bytes)[0]
             if number == -1:
                 return None
-            date = bytes_array[4:12]
+            time = bytes_array[4:12]
             value = bytes_array[12:16]
             signal = bytes_array[16:17]
-            status = True
-            return TechnologicalParameter(number, number_in_bytes, date, value, signal, status)
+            return TechnologicalParameter(number, time, value, signal)
         except Exception as exception:
             logger.log(exception)
-            
+
     # endregion
