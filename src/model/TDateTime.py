@@ -2,8 +2,20 @@ from datetime import datetime, timedelta
 
 
 class TDateTime:
-    def __init__(self, time_in_datetime: datetime = datetime.now()) -> None:
-        self.set_time(time_in_datetime)
+
+    # region Init
+
+    def __init__(self, time_in_tdatetime = None, time_in_datetime: datetime = datetime.now()):
+        if time_in_tdatetime and type(time_in_datetime) == float:
+            self.set_time_in_TDateTime(time_in_tdatetime)
+        elif time_in_datetime and type(time_in_datetime) == datetime:
+            self.set_time_in_datetime
+        else:
+            self.set_time_in_datetime(datetime.now())
+
+    # endregion
+
+    # region Converting
 
     def tdatetime_to_datetime(tdatetime: float) -> datetime:
         return datetime(1899, 12, 30) + timedelta(days=tdatetime)
@@ -13,17 +25,29 @@ class TDateTime:
         tdatetime = delta_time.total_seconds() / 3600 / 24
         return tdatetime
 
+    # endregion
+
+    # region Setters
+
+    def set_time_in_datetime(self, time_in_datetime: datetime = datetime.now()):
+        self.time_in_datetime = time_in_datetime
+        self.time_in_TDateTime = self.datetime_to_tdatetime(self.time_in_datetime)
+
+    def set_time_in_TDateTime(self, time_in_TDateTime: float):
+        self.time_in_TDateTime = time_in_TDateTime
+        self.time_in_datetime = self.tdatetime_to_datetime(time_in_TDateTime)
+
+    # endregion
+
+    # region Getters
+
+    def get_time_in_datetime(self) -> datetime:
+        return self.time_in_datetime
+
+    def get_time_in_TDateTime(self) -> float:
+        return self.time_in_TDateTime
+
+    # endregion
+
     def __str__(self) -> str:
-        return str(self.time)
-
-    def set_time(self, time_in_datetime: datetime = datetime.now()) -> None:
-        self.time = time_in_datetime
-
-    def set_tdatetime(self, time_in_tdatetime: float) -> None:
-        self.time = self.tdatetime_to_datetime(time_in_tdatetime)
-
-    def get_time(self) -> datetime:
-        return self.time
-
-    def get_tdatetime(self) -> float:
-        return self.datetime_to_tdatetime(self.time)
+        return str(self.time_in_datetime)

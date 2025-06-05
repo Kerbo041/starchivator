@@ -1,24 +1,27 @@
 from struct import pack, unpack
 from datetime import datetime
-# import mmap
-from model.logger import logger
-from model.technological_parameter import technological_parameter
+from model.Logger import Logger
+from model.TechnologicalParameter import TechnologicalParameter
+from model.TechnologicalParametersArray import TechnologicalParametersArray
+from model.Config import Config, ConfigFilePaths
 
-def parse_readed_out_file_from_buffer(out_file_buffered_data, number_of_values, out_file_path):
+
+def parse_readed_out_file_from_buffer(
+    out_file_buffered_data, number_of_values, out_file_path, logger: Logger
+):
     try:
-        out_file_data = {}
+        out_file_data_parameters_array = []
         for iter in range(number_of_values):
             out_file_line = out_file_buffered_data[iter * 17 : (iter + 1) * 17]
-            readed_data = read_out_file_line_from_buffer(out_file_line)
-            if readed_data == None:
+            readed_parameter = read_out_file_line_from_buffer(out_file_line)
+            if readed_parameter == None:
                 continue
-            out_file_data[readed_data["Number"]] = {
-                "Value": readed_data["Value"],
-                "Signal": readed_data["Signal"],
-                "Status": readed_data["Status"],
-            }
-        logger.log(f"readed {len(out_file_data)} from {out_file_path}", debug= True)
-        return out_file_data
+            out_file_data_parameters_array.append(readed_parameter)
+        logger.log(
+            f"readed {len(out_file_data_parameters_array)} from {out_file_path}",
+            debug=True,
+        )
+        return out_file_data_parameters_array
     except Exception as exception:
         logger.log(f"error: parsing {out_file_path}: {exception}")
         return None
@@ -33,59 +36,23 @@ def read_out_file_line_from_buffer(out_file_line):
     number = unpack("<i", number_in_bytes)[0]
     if number == -1:
         return None
-    date = out_file_line[4:12]
-    value = out_file_line[12:16]
-    signal = out_file_line[16:17]
-    status = True
-    # if date == b"\xff\xff\xff\xff\xff\xff\xff\xff" or number_in_bytes == b"\xff\xff\xff\xff":
-    #     status = False
-    return {
-        "Number": number,
-        "Date": date,
-        "Value": value,
-        "Signal": signal,
-        "Status": status,
-    }
+    return TechnologicalParameter(
+        number, out_file_line[4:12], out_file_line[12:16], out_file_line[16:17]
+    )
 
 
-def get_empty_line():
-    return {
-        "Number": -1,
-        "NumberInBytes": b"\xff\xff\xff\xff",
-        "Date": b"\xff\xff\xff\xff\xff\xff\xff\xff",
-        "Value": b"\xff\xff\xff\xff",
-        "Signal": b"\xff",
-        "Status": False,
-    }
+def fill_values_end_with_empty_lines(array_of_values, count_of_values):
+    last_element_index = len(array_of_values)
+    if last_element_index < count_of_values:
+        for i in range(last_element_index, count_of_values):
+            array_of_values.append(TechnologicalParameter())
 
 
-def fill_values_end_with_empty_lines(values, count_of_values):
+def arrays_join(out_0_file_data, out_1_file_data, analog_count, logger: Logger):
     try:
-        new_values = {}
-        for i in range(count_of_values):
-            if i in values.keys():
-                new_values[i] = values[i]
-            else:
-                new_values[i] = get_empty_line()
-        return new_values
-    except Exception as exception:
-        logger.log(f"error: {exception}")
-        return None
-
-
-# def fill_values_end_with_empty_lines(values, count_of_values):
-#     new_values = values
-#     for i in range(count_of_values):
-#         if not i in new_values.keys():
-#             new_values[i] = get_empty_line()
-#     return new_values
-
-
-def arrays_join(out_0_file_data, out_1_file_data, analog_count=20000):
-    try:
-        out_values = {}
-        for analog_value_key in out_0_file_data:
-            out_values[analog_value_key] = out_0_file_data[analog_value_key]
+        out_values = []
+        for analog_value in out_0_file_data:
+            out_values.append(analog_value)
         for discrete_value_key in out_1_file_data:
             out_values[analog_count + discrete_value_key] = out_1_file_data[
                 discrete_value_key
@@ -95,52 +62,39 @@ def arrays_join(out_0_file_data, out_1_file_data, analog_count=20000):
         logger.log(f"error: {exception}")
         return None
 
-def get_out_data_with_buffer(
-    out_0_path, out_1_path, analog_count=20000, discrete_count=180000
-):
+
+def get_out_data_with_buffer(config: Config, logger:Logger) -> TechnologicalParametersArray:
     try:
-        time1 = datetime.now()
-        with open(out_0_path, mode="rb") as out_file:
+
+        with open(config.file_paths.path_out_0, mode="rb") as out_file:
             buffered_out_0_file_data = out_file.read()
-            # with mmap.mmap(
-            #     out_file.fileno(), length=0, access=mmap.ACCESS_READ
-            # ) as out_file_mapped:
-            #     buffered_out_0_file_data = out_file_mapped.read()
-        time2 = datetime.now()
-        # logger.debug_log(f"{out_0_path} was readed successfully, reading time is {time2-time1}")
-        with open(out_1_path, mode="rb") as out_file:
+
+        with open(config.file_paths.path_out_1, mode="rb") as out_file:
             buffered_out_1_file_data = out_file.read()
-            # with mmap.mmap(
-            #     out_file.fileno(), length=0, access=mmap.ACCESS_READ
-            # ) as out_file_mapped:
-            #     buffered_out_1_file_data = out_file_mapped.read()
-        time3 = datetime.now()
-        # logger.log(f"{out_1_path} was readed successfully, reading time is {time3-time2}", debug = True)
+
     except Exception as exeption:
         logger.debug_log(f"file reading: {exeption}")
         return None
 
     out_0_file_data = parse_readed_out_file_from_buffer(
-        buffered_out_0_file_data, analog_count, out_0_path
+        buffered_out_0_file_data,
+        config.TOTAL_NUMBER_OF_ANALOG_VALUES,
+        config.file_paths.path_out_0,
     )
     out_1_file_data = parse_readed_out_file_from_buffer(
-        buffered_out_1_file_data, discrete_count, out_1_path
+        buffered_out_1_file_data,
+        config.TOTAL_NUMBER_OF_DISCRETE_VALUES,
+        config.file_paths.path_out_1,
     )
-    
-    if out_0_file_data == None or out_1_file_data == None:
-        return None
-    
-    out_0_file_data = fill_values_end_with_empty_lines(out_0_file_data, analog_count)
-    out_1_file_data = fill_values_end_with_empty_lines(out_1_file_data, discrete_count)
 
     if out_0_file_data == None or out_1_file_data == None:
         return None
-    
-    out_values = arrays_join(out_0_file_data, out_1_file_data, analog_count)
-    
+
+    out_values = arrays_join(
+        out_0_file_data, out_1_file_data, config.TOTAL_NUMBER_OF_ANALOG_VALUES
+    )
+
     if out_values == None:
         return None
 
-    return out_values
-
-
+    return TechnologicalParametersArray(out_values, config.TOTAL_NUMBER_OF_VALUES)

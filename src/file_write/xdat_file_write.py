@@ -2,7 +2,7 @@ from struct import pack, unpack
 from model.TDateTime import TDateTime
 from datetime import datetime
 import os
-from model.logger import logger
+from model.Logger import Logger
 
 def x_dat_file_write(
     x_dat_path, array_of_buffer_values, header_text, special_buffer_signal, next_parameter_index
@@ -16,10 +16,10 @@ def x_dat_file_write(
             write_buffered_values(x_file, array_of_buffer_values)
         # logger.debug_log(f"{x_dat_path} written, current size is {next_parameter_index}, current sync value is {special_buffer_signal}")
         
-        logger.log(f"{x_dat_path}\t file written, current size is {next_parameter_index}, current sync value is {special_buffer_signal}", debug = True)
+        Logger.log(f"{x_dat_path}\t file written, current size is {next_parameter_index}, current sync value is {special_buffer_signal}", debug = True)
 
     except Exception as exception:
-        logger.log(f"error:\tx.dat writing:\t{exception}")
+        Logger.log(f"error:\tx.dat writing:\t{exception}")
 
 def header_write(
     file, header_text: str, special_buffer_signal: int, next_parameter_index: int
@@ -31,7 +31,7 @@ def header_write(
         file.write(pack("<i", special_buffer_signal))
         file.write(pack("<i", next_parameter_index))
     except Exception as exception:
-        logger.log(f"error:\tx.dat header writing:\t{exception}")
+        Logger.log(f"error:\tx.dat header writing:\t{exception}")
 
 
 def write_buffered_values(file, array_of_buffer_values):
@@ -41,5 +41,5 @@ def write_buffered_values(file, array_of_buffer_values):
             file.write(array_of_buffer_values[number]["Value"])
             file.write(array_of_buffer_values[number]["Signal"])
     except Exception as exception:
-        logger.log(f"error:\tx.dat values writing:\t{exception}")
+        Logger.log(f"error:\tx.dat values writing:\t{exception}")
 

@@ -1,39 +1,38 @@
 import os
 from struct import pack
 from model.TDateTime import TDateTime
-from model.logger import logger
+from model.Logger import Logger
+from model.Config import Config
 
 
 def archive_file_write(
-    folder_path,
-    header_text,
+    config:Config,
     current_values,
     changed_values,
     current_time,
     is_new_hour,
     is_new_day,
     BLOCK_NUMBER,
-    number_of_all_values=200000,
-    number_of_analog_values=20000
+    logger:Logger
 ):
     try:
         file_name_archive = (f"{current_time.strftime("%Y%m%d")}.VO{BLOCK_NUMBER}")
         # file_name_archive = (
         #     f"{current_time.year}{current_time.month}{current_time.day}.VO{BLOCK_NUMBER}"
         # )
-        archive_file_path = os.path.join(folder_path, file_name_archive)
-        if not os.path.isdir(folder_path):
-            os.makedirs(folder_path, exist_ok=True)
+        archive_file_path = os.path.join(config.file_paths.path_arc_folder, file_name_archive)
+        if not os.path.isdir(config.file_paths.path_arc_folder):
+            os.makedirs(config.file_paths.path_arc_folder, exist_ok=True)
             logger.log("archive:\tfolder created")
         if not os.path.isfile(archive_file_path):
             with open(archive_file_path, "wb+") as archive_file:
                 logger.log("archive:\tfile created")
                 write_header_to_archive_file(
                     archive_file,
-                    header_text,
+                    config.header_texts.archive,
                     current_time,
-                    number_of_all_values,
-                    number_of_analog_values,
+                    config.TOTAL_NUMBER_OF_VALUES,
+                    config.TOTAL_NUMBER_OF_ANALOG_VALUES,
             )
     except Exception as exception:
         logger.log(f"error:\tarchvie file creation: {exception}")
@@ -65,7 +64,7 @@ def write_header_to_archive_file(
     header_text,
     current_time,
     number_of_all_values,
-    number_of_analog_values,
+    number_of_analog_values,, logger:Logger
 ):
     try:
         length_of_one_value = 5
@@ -82,7 +81,7 @@ def write_header_to_archive_file(
 
 
 def set_header_time_of_archive_file(
-    archive_file, current_time, current_cursor_position
+    archive_file, current_time, current_cursor_position, logger:Logger
 ):
     try:
         archive_file.seek(16)
@@ -94,7 +93,7 @@ def set_header_time_of_archive_file(
 
 
 def set_hour_photo_index_in_header(
-    archive_file, current_cursor_position, current_time_hour
+    archive_file, current_cursor_position, current_time_hour, logger:Logger
 ):
     try:
         archive_file.seek(24 + 4 * current_time_hour)
