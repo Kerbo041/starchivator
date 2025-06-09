@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 import inspect
-
+from model.Config import Config
 
 class Log:
 
@@ -20,7 +20,6 @@ class Log:
 
     def __str__(self):
         return str(self.time) + ": " + self.message
-        
 
 
 class Logger:
@@ -36,17 +35,20 @@ class Logger:
         program_dir_path, default_log_folder_path_name
     )
 
-    @classmethod
-    def set_default_log_folder_path(cls, __file, default_log_folder_path_name="logs\\"):
+    def __init__(self, config:Config):
+        self.set_log_config(config)
+
+    def set_default_log_folder_path(
+        self, __file, default_log_folder_path_name="logs\\"
+    ):
         program_path = os.path.realpath(__file)
         program_dir_path = os.path.dirname(program_path)
-        cls.default_log_folder_path = os.path.join(
+        self.default_log_folder_path = os.path.join(
             program_dir_path, default_log_folder_path_name
         )
 
-    @classmethod
     def log(
-        cls, message, debug=False, disposable=False, default_file_path_logging=False
+        self, message, debug=False, disposable=False, default_file_path_logging=False
     ):
         log = Log(
             message=message,
@@ -54,26 +56,24 @@ class Logger:
             disposable=disposable,
             default_file_path_logging=default_file_path_logging,
         )
-        if (debug and cls.debug_logging_enabled) or not debug:
-            if cls.console_logging_enabled:
-                cls.console_logging(log)
-            if cls.file_logging_enabled:
-                cls.file_logging(log, cls.get_log_file_path())
+        if (debug and self.debug_logging_enabled) or not debug:
+            if self.console_logging_enabled:
+                self.console_logging(log)
+            if self.file_logging_enabled:
+                self.file_logging(log, self.get_log_file_path())
                 if default_file_path_logging:
-                    cls.file_logging(log, cls.get_default_log_file_path())
+                    self.file_logging(log, self.get_default_log_file_path())
 
-    @classmethod
-    def console_logging(cls, log):
+    def console_logging(self, log):
         try:
             print(str(log))
         except Exception as exception:
             if not log.disposable:
-                cls.log(
+                self.log(
                     f"console logging error: {exception}", debug=False, disposable=True
                 )
 
-    @classmethod
-    def file_logging(cls, log: Log, file_path):
+    def file_logging(self, log: Log, file_path):
         try:
             log_directory_path = os.path.dirname(file_path)
             if not os.path.isdir(log_directory_path):
@@ -82,36 +82,34 @@ class Logger:
                 print(str(log), file=log_file)
         except Exception as exception:
             if not log.disposable:
-                cls.log(
+                self.log(
                     log.message,
                     debug=False,
                     disposable=True,
                     default_file_path_logging=True,
                 )
-                cls.log(
+                self.log(
                     f"file logging error: {exception}",
                     debug=False,
                     disposable=True,
                     default_file_path_logging=True,
                 )
 
-    @classmethod
-    def get_default_log_file_path(cls):
+    def get_default_log_file_path(self):
         current_time = datetime.now()
         # file_name = f"{logger.log_folder_path}/log_{current_time.year}{current_time.month}{current_time.day}.log"
         file_name = f"{current_time.strftime("%Y%m%d")}.log"
-        return os.path.join(cls.default_log_folder_path, file_name)
+        return os.path.join(self.default_log_folder_path, file_name)
 
-    @classmethod
-    def get_log_file_path(cls):
+    def get_log_file_path(self):
         current_time = datetime.now()
         log_file_name = f"{current_time.strftime("%Y%m%d")}.log"
         # return f"{logger.log_folder_path}/log_{current_time.year}{current_time.month}{current_time.day}.log"
-        return os.path.join(cls.log_folder_path, log_file_name)
+        return os.path.join(self.log_folder_path, log_file_name)
 
-    @classmethod
-    def set_log_config(cls, logs_config):
-        cls.console_logging_enabled = logs_config["console_logging_enabled"]
-        cls.file_logging_enabled = logs_config["file_logging_enabled"]
-        cls.debug_logging_enabled = logs_config["debug_logging_enabled"]
-        cls.log_folder_path = logs_config["Path_log_folder_path"]
+    def set_log_config(self, config:Config):
+        self.console_logging_enabled = config.log_config.console_logging_enabled
+        self.file_logging_enabled = config.log_config.file_logging_enabled
+        self.debug_logging_enabled = config.log_config.debug_logging_enabled
+        self.log_folder_path = config.log_config.Path_log_folder_path
+
