@@ -1,4 +1,10 @@
 {
+    "ProgramParameters":{
+        "total_number_of_values": 200000, 
+        "total_number_of_analog_values": 20000,
+        "buffer_size": 7277,
+        "block_number": 3
+    },
     "Paths": {
         "Path_out_dat": "c:\\spd3\\dat_py\\out.dat",
         "Path_x_dat": "c:\\spd3\\dat_py\\x.dat",
