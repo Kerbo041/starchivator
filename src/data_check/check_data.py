@@ -1,27 +1,26 @@
-def check_data_array(values_old, values_new):
-    # if len(values_old) != len(values_new):
-    #     return ["ERROR"]
-    changed_values = []
-    for i in range(len(values_new)):
-        if values_new[i]["Status"]:
+from model.TechnologicalParameter import TechnologicalParameter
+from model.TechnologicalParametersArray import TechnologicalParametersArray
+from model.BufferArray import BufferArray
+from model.Config import Config
+from model.Logger import Logger
 
-            if (
-                values_old[i]["Value"] != values_new[i]["Value"]
-                or values_old[i]["Signal"] != values_new[i]["Signal"]
-            ):  # or values_old[i]["Status"] != values_new[i]["Status"]) :
-                changed_values.append(
-                    {
-                        "Number": i,
-                        "Value": values_new[i]["Value"],
-                        "Signal": values_new[i]["Signal"],
-                        "Status": values_new[i]["Status"],
-                    }
-                )
-    # if len(changed_values) < 100:
-    #     for i in changed_values:
-    #         print(
-    #             f"old {values_old[i["Number"]]["Value"]}{values_old[i["Number"]]["Signal"]} new {i["Value"]}{i["Signal"]}, index: {i["Number"]}",
-    #             file=open("logs/parampyrym.txt", "a+"),
-    #         )
-    # print("", end="\n\n\n", file=open("logs/parampyrym.txt", "a+"))
-    return changed_values
+
+def compare_buffer_and_write_data_array(
+    current_parameters_array: TechnologicalParametersArray,
+    reading_parameters_array: TechnologicalParametersArray,
+    buffer_parameters_array:BufferArray,
+    config: Config,
+    logger: Logger,
+):
+    buffered = True
+    for iter in range(config.TOTAL_NUMBER_OF_VALUES):
+        
+        if current_parameters_array.parameters_array[iter] == reading_parameters_array.parameters_array[iter] or not reading_parameters_array.parameters_array[iter].state :
+            pass
+        else:
+            current_parameters_array.parameters_array[iter].set_all_values_from_tuple(reading_parameters_array.parameters_array[iter].get_all_values())
+            if buffered:
+                buffered = buffer_parameters_array.add_element_to_array(reading_parameters_array.parameters_array[iter])
+            else:
+                pass
+    current_parameters_array.set_time()

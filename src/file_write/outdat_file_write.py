@@ -9,9 +9,9 @@ from model.Config import Config
 
 
 def out_dat_file_write(
-    config: Config,
     parameters_array_object: TechnologicalParametersArray,
     special_buffer_signal,
+    config: Config,
     logger: Logger,
 ):
     try:
@@ -24,7 +24,7 @@ def out_dat_file_write(
                 config.file_paths.path_out_dat,
                 config.header_texts.out_dat,
                 special_buffer_signal,
-                logger
+                logger,
             )
             write_all_data_to_out_dat(out_dat_file, parameters_array_object, logger)
             logger.log(
@@ -50,13 +50,13 @@ def header_write(
 
 
 def write_all_data_to_out_dat(
-    out_dat_file, parameters_array_object: TechnologicalParametersArray, logger:Logger
+    out_dat_file, parameters_array_object: TechnologicalParametersArray, logger: Logger
 ):
     try:
         for parameter in parameters_array_object.parameters_array:
             if type(parameter) == TechnologicalParameter:
                 out_dat_file.write(parameter.get_value())
-                out_dat_file.write(parameter.get_state())
+                out_dat_file.write(parameter.get_signal())
         # logger.log("{out_dat_path}\tfile written", debug = True)
     except Exception as exception:
-        logger.log(f"error:\tout.dat header writing:\t{exception}")
+        logger.log(f"error:\tout.dat writing:\t{exception}")

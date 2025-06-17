@@ -4,16 +4,20 @@ from model.TechnologicalParameter import TechnologicalParameter
 
 class TechnologicalParametersArray:
 
-    def __init__(self,parameters_array = None, total_number_of_parameters = 200000, ):
-        self.time = datetime.now()
+    def __init__(self,parameters_array = None, total_number_of_parameters = 200000, time = None):
         self.total_number_of_parameters = total_number_of_parameters
         if parameters_array == None:
-            self.parameters_array = self.set_empty_parameters_array()
+            self.set_empty_parameters_array()
         else: 
             self.parameters_array = parameters_array
         self.number_of_valid_parameters = self.set_number_of_valid_parameters()
+        self.set_time()
         
-    
+    def set_time(self, time = None):
+        if time:
+            self.time = time
+        else:
+            self.time = datetime.now()
 
     def set_empty_parameters_array(self):
         self.parameters_array = []
@@ -39,3 +43,4 @@ class TechnologicalParametersArray:
     
     def get_time(self):
         return self.time
+        

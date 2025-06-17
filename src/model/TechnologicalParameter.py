@@ -10,16 +10,17 @@ class TechnologicalParameter:
     def __init__(
         self,
         number=-1,
-        time=None,
+        time=b"\xff\xff\xff\xff\xff\xff\xff\xff",
         value=b"\xff\xff\xff\xff",
         signal=b"\xff",
+        logger:Logger = None
     ):
         self.set_number(number)
         self.set_time(time)
         self.set_value(value)
         self.set_signal(signal)
         self.state = self.check_state()
-
+        self.logger = logger
     # endregion
 
     # region Setters
@@ -37,7 +38,7 @@ class TechnologicalParameter:
 
     def set_value(self, value):
         if value is not None:
-            if (type(value) is bytearray or type(value) is bytes) and len(value) == 8:
+            if (type(value) is bytearray or type(value) is bytes):
                 self.value = value
             else:
                 self.value = b"\xff\xff\xff\xff\xff\xff\xff\xff"
@@ -52,13 +53,55 @@ class TechnologicalParameter:
         ):
             self.signal = signal
 
-    def set_time(self, time):
-        if type(time) == datetime:
-            self.time = time
-        elif type(time) == float:
-            self.time = TDateTime.tdatetime_to_datetime(self.time)
-        elif (type(time) == bytearray or type(time)) == bytes and len(time) == 8:
-            self.time = TDateTime.tdatetime_to_datetime(unpack("<d", time))
+    def set_time(self, time, valid=True):
+        try:
+            if valid:
+                if type(time) == datetime:
+                    self.time = time
+                    self.is_time_valid = True   
+                elif type(time) == float:
+                    self.time = TDateTime.tdatetime_to_datetime(self.time)
+                    self.is_time_valid = True   
+                elif (type(time) == bytearray or type(time)) == bytes:
+                    if time == b"\xff\xff\xff\xff\xff\xff\xff\xff":
+                        self.is_time_valid = False
+                        self.time = time
+                    else:
+                        self.time = TDateTime.tdatetime_to_datetime(unpack("<d", time)[0])
+                        self.is_time_valid = True   
+                else:
+                    if time == b"\xff\xff\xff\xff\xff\xff\xff\xff":
+                        self.is_time_valid = False
+                        self.time = time
+                    else:
+                        self.time = TDateTime.tdatetime_to_datetime(unpack("<d", time)[0])
+                        self.is_time_valid = True   
+            else:
+                self.time = time
+                self.is_time_valid = False
+        except Exception as exception:
+            if self.logger:
+                self.logger.log(exception)
+    def set_all_values(self, number, time, value, signal):
+        self.set_number(number)
+        self.set_time(time)
+        self.set_value(value)
+        self.set_signal(signal)
+        self.check_state()
+
+    def set_all_values_from_tuple(self, tuple_with_parameters):
+        (number, time, value, signal) = tuple_with_parameters
+        self.set_number(number)
+        self.set_time(time)
+        self.set_value(value)
+        self.set_signal(signal)
+        self.check_state()
+
+    def set_empty(self):
+        self.set_number(-1)
+        self.set_time(b"\xff\xff\xff\xff\xff\xff\xff\xff")
+        self.set_value(b"\xff\xff\xff\xff\xff\xff\xff\xff")
+        self.set_signal(b"\xff")
 
     # endregion
 
@@ -68,10 +111,14 @@ class TechnologicalParameter:
         return self.time
 
     def get_time_in_tdatetime(self):
-        return TDateTime.datetime_to_tdatetime(self.time)
+        if self.is_time_valid:
+            return TDateTime.datetime_to_tdatetime(self.time)
 
     def get_value(self):
         return self.value
+
+    def get_signal(self):
+        return self.signal
 
     def get_number(self):
         return self.number
@@ -81,6 +128,9 @@ class TechnologicalParameter:
 
     def get_state(self):
         return self.check_state()
+
+    def get_all_values(self):
+        return (self.get_number(), self.get_time(), self.get_value(), self.get_signal())
 
     # endregion
 

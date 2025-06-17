@@ -2,27 +2,47 @@ from struct import pack, unpack
 from model.TDateTime import TDateTime
 from datetime import datetime
 import os
+from model.BufferArray import BufferArray
+from model.TechnologicalParameter import TechnologicalParameter
 from model.Logger import Logger
+from model.Config import Config
+
 
 def x_dat_file_write(
-    x_dat_path, array_of_buffer_values, header_text, special_buffer_signal, next_parameter_index
+    buffer_parameters_array: BufferArray,
+    config: Config,
+    logger: Logger,
 ):
     try:
-        directory_path = os.path.dirname(x_dat_path)
+        directory_path = os.path.dirname(config.file_paths.path_x_dat)
         if not os.path.exists(directory_path):
             os.makedirs(directory_path, exist_ok=True)
-        with open(x_dat_path, "rb+") as x_file:
-            header_write(x_file, header_text, special_buffer_signal, next_parameter_index)
-            write_buffered_values(x_file, array_of_buffer_values)
-        # logger.debug_log(f"{x_dat_path} written, current size is {next_parameter_index}, current sync value is {special_buffer_signal}")
-        
-        Logger.log(f"{x_dat_path}\t file written, current size is {next_parameter_index}, current sync value is {special_buffer_signal}", debug = True)
+            
+        with open(config.file_paths.path_x_dat, "wb+") as x_file:
+            header_write(
+                x_file,
+                config.header_texts.x_dat,
+                buffer_parameters_array.buffer_number,
+                buffer_parameters_array.buffer_length,
+                logger,
+            )
+            write_buffered_values(x_file, buffer_parameters_array.buffer_array, logger)
+            
+        logger.log(
+            f"{config.file_paths.path_x_dat}\t file written, current size is {buffer_parameters_array.buffer_length}, current sync value is {buffer_parameters_array.buffer_number}",
+            debug=True,
+        )
 
     except Exception as exception:
-        Logger.log(f"error:\tx.dat writing:\t{exception}")
+        logger.log(f"error:\tx.dat writing:\t{exception}")
+
 
 def header_write(
-    file, header_text: str, special_buffer_signal: int, next_parameter_index: int
+    file,
+    header_text: str,
+    special_buffer_signal: int,
+    next_parameter_index: int,
+    logger: Logger,
 ):
     try:
         file.seek(0)
@@ -31,15 +51,15 @@ def header_write(
         file.write(pack("<i", special_buffer_signal))
         file.write(pack("<i", next_parameter_index))
     except Exception as exception:
-        Logger.log(f"error:\tx.dat header writing:\t{exception}")
+        logger.log(f"error:\tx.dat header writing:\t{exception}")
 
 
-def write_buffered_values(file, array_of_buffer_values):
+def write_buffered_values(file, buffered_parameters_array, logger: Logger):
     try:
-        for number in array_of_buffer_values:
-            file.write(pack("<i", array_of_buffer_values[number]["Number"]))
-            file.write(array_of_buffer_values[number]["Value"])
-            file.write(array_of_buffer_values[number]["Signal"])
+        for parameter in buffered_parameters_array:
+            if type(parameter) == TechnologicalParameter:
+                file.write(pack("<i", parameter.get_number()))
+                file.write(parameter.get_value())
+                file.write(parameter.get_signal())
     except Exception as exception:
-        Logger.log(f"error:\tx.dat values writing:\t{exception}")
-
+        logger.log(f"error:\tx.dat values writing:\t{exception}")
