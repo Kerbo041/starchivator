@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 import inspect
-from model.Config import Config
+from model.Config import ConfigLogs
 
 class Log:
 
@@ -35,7 +35,7 @@ class Logger:
         program_dir_path, default_log_folder_path_name
     )
 
-    def __init__(self, config:Config):
+    def __init__(self, config:ConfigLogs):
         self.set_log_config(config)
 
     def set_default_log_folder_path(
@@ -107,9 +107,9 @@ class Logger:
         # return f"{logger.log_folder_path}/log_{current_time.year}{current_time.month}{current_time.day}.log"
         return os.path.join(self.log_folder_path, log_file_name)
 
-    def set_log_config(self, config:Config):
-        self.console_logging_enabled = config.log_config.console_logging_enabled
-        self.file_logging_enabled = config.log_config.file_logging_enabled
-        self.debug_logging_enabled = config.log_config.debug_logging_enabled
-        self.log_folder_path = config.log_config.Path_log_folder_path
+    def set_log_config(self, log_config:ConfigLogs):
+        self.console_logging_enabled =log_config.console_logging_enabled
+        self.file_logging_enabled = log_config.file_logging_enabled
+        self.debug_logging_enabled = log_config.debug_logging_enabled
+        self.log_folder_path = log_config.Path_log_folder_path
 
