@@ -44,3 +44,5 @@ class TechnologicalParametersArray:
     def get_time(self):
         return self.time
         
+    def set_technological_parameter(self, number, parameters_tuple):
+        self.parameters_array[number].set_all_values_from_tuple(parameters_tuple)

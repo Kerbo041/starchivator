@@ -10,7 +10,7 @@ from model.BufferArray import BufferArray
 from model.Config import Config
 
 
-def do_archivation_iteration(
+def do_archiving_iteration(
     current_parameters_array: TechnologicalParametersArray,
     reading_parameters_array: TechnologicalParametersArray,
     buffer_parameters_array: BufferArray,
@@ -55,7 +55,7 @@ def start(config_path="src/config.json"):
     )
 
     while True:
-        do_archivation_iteration(
+        do_archiving_iteration(
             current_parameters_array,
             reading_parameters_array,
             buffer_parameters_array,

@@ -21,9 +21,12 @@ def parse_readed_out_file_from_buffer(
             if number_in_bytes == b"":
                 return None
             number = unpack("<i", number_in_bytes)[0]
-            reading_buffer_array.parameters_array[iter].set_all_values(
+            reading_buffer_array.set_technological_parameter(iter, (
                 number, out_file_line[4:12], out_file_line[12:16], out_file_line[16:17]
-            )
+            ))
+            # reading_buffer_array.parameters_array[iter].set_all_values(
+            #     number, out_file_line[4:12], out_file_line[12:16], out_file_line[16:17]
+            # )
         reading_buffer_array.set_time()
 
     except Exception as exception:

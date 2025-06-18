@@ -5,6 +5,7 @@ from datetime import datetime
 
 
 class TechnologicalParameter:
+
     # region Init
 
     def __init__(
@@ -13,7 +14,7 @@ class TechnologicalParameter:
         time=b"\xff\xff\xff\xff\xff\xff\xff\xff",
         value=b"\xff\xff\xff\xff",
         signal=b"\xff",
-        logger:Logger = None
+        logger: Logger = None,
     ):
         self.set_number(number)
         self.set_time(time)
@@ -21,6 +22,7 @@ class TechnologicalParameter:
         self.set_signal(signal)
         self.state = self.check_state()
         self.logger = logger
+
     # endregion
 
     # region Setters
@@ -38,7 +40,7 @@ class TechnologicalParameter:
 
     def set_value(self, value):
         if value is not None:
-            if (type(value) is bytearray or type(value) is bytes):
+            if type(value) is bytearray or type(value) is bytes:
                 self.value = value
             else:
                 self.value = b"\xff\xff\xff\xff\xff\xff\xff\xff"
@@ -58,30 +60,35 @@ class TechnologicalParameter:
             if valid:
                 if type(time) == datetime:
                     self.time = time
-                    self.is_time_valid = True   
+                    self.is_time_valid = True
                 elif type(time) == float:
                     self.time = TDateTime.tdatetime_to_datetime(self.time)
-                    self.is_time_valid = True   
+                    self.is_time_valid = True
                 elif (type(time) == bytearray or type(time)) == bytes:
                     if time == b"\xff\xff\xff\xff\xff\xff\xff\xff":
                         self.is_time_valid = False
                         self.time = time
                     else:
-                        self.time = TDateTime.tdatetime_to_datetime(unpack("<d", time)[0])
-                        self.is_time_valid = True   
+                        self.time = TDateTime.tdatetime_to_datetime(
+                            unpack("<d", time)[0]
+                        )
+                        self.is_time_valid = True
                 else:
                     if time == b"\xff\xff\xff\xff\xff\xff\xff\xff":
                         self.is_time_valid = False
                         self.time = time
                     else:
-                        self.time = TDateTime.tdatetime_to_datetime(unpack("<d", time)[0])
-                        self.is_time_valid = True   
+                        self.time = TDateTime.tdatetime_to_datetime(
+                            unpack("<d", time)[0]
+                        )
+                        self.is_time_valid = True
             else:
                 self.time = time
                 self.is_time_valid = False
         except Exception as exception:
             if self.logger:
                 self.logger.log(exception)
+
     def set_all_values(self, number, time, value, signal):
         self.set_number(number)
         self.set_time(time)
@@ -169,7 +176,9 @@ class TechnologicalParameter:
 
     # region Creation
 
-    def get_technological_parameter_from_bytes(self, bytes_array: bytearray):
+    def get_technological_parameter_from_bytes(
+        self, bytes_array: bytearray, logger: Logger
+    ):
         try:
             if len(bytes_array) < 17:
                 return None
