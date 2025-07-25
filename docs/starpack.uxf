@@ -1,0 +1,180 @@
+<diagram program="umletino" version="15.1"><zoom_level>7</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLNote</id><coordinates><x>686</x><y>469</y><w>98</w><h>49</h></coordinates><panel_attributes>out.0
+analog data
+no header
+
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>700</x><y>623</y><w>98</w><h>49</h></coordinates><panel_attributes>out.1
+analog data
+no header
+
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>364</x><y>546</y><w>147</w><h>63</h></coordinates><panel_attributes>_parameter_
+--
+[4 bytes] number (int)
+[8 bytes] time (TDateTime)
+[4 bytes] Value (float)
+[1 byte] Status (char)
+bg=blue
+fg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>938</x><y>539</y><w>147</w><h>77</h></coordinates><panel_attributes>_module: out_file_read_buffered_
+--
+get_out_data_with_buffer()
+bg=#aaaaaa</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>777</x><y>483</y><w>175</w><h>98</h></coordinates><panel_attributes>lt=&lt;&lt;-
+reading</panel_attributes><additional_attributes>230;120;120;120;120;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>714</x><y>343</y><w>147</w><h>49</h></coordinates><panel_attributes>_Config_
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>791</x><y>581</y><w>161</w><h>84</h></coordinates><panel_attributes>lt=&lt;&lt;-
+reading</panel_attributes><additional_attributes>210;10;100;10;100;100;10;100</additional_attributes></element><element><id>UMLNote</id><coordinates><x>497</x><y>343</y><w>98</w><h>49</h></coordinates><panel_attributes>config.json
+
+
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>588</x><y>357</y><w>140</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+reading</panel_attributes><additional_attributes>180;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1183</x><y>553</y><w>161</w><h>49</h></coordinates><panel_attributes>_object: reading_buffer_array_
+--
+total_number_of_parameters = 200000
+parameters_array = Array[200000]
+time: {current}</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1456</x><y>476</y><w>231</w><h>77</h></coordinates><panel_attributes>_module: compare_buffer_and_write_data_array_
+--
+
+bg=#aaaaaa</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1862</x><y>630</y><w>182</w><h>63</h></coordinates><panel_attributes>_object: current_parameters_array_
+--
+total_number_of_parameters = 200000
+parameters_array = Array[200000]
+time: {current}</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1855</x><y>497</y><w>147</w><h>49</h></coordinates><panel_attributes>_object: buffer_parameters_array_
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1078</x><y>567</y><w>119</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+filling</panel_attributes><additional_attributes>150;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1680</x><y>511</y><w>189</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+fill with changed</panel_attributes><additional_attributes>250;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1680</x><y>532</y><w>196</w><h>147</h></coordinates><panel_attributes>lt=&lt;&lt;-
+fill all</panel_attributes><additional_attributes>260;190;150;190;150;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2289</x><y>511</y><w>231</w><h>77</h></coordinates><panel_attributes>_module: archive_file_write_
+--
+id: Long="36548"
+[waiting for message]
+bg=#aaaaaa</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2289</x><y>350</y><w>231</w><h>77</h></coordinates><panel_attributes>_module: x_dat_file_write_
+--
+id: Long="36548"
+[waiting for message]
+bg=#aaaaaa</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2289</x><y>672</y><w>231</w><h>77</h></coordinates><panel_attributes>_module: out_dat_file_write_
+--
+id: Long="36548"
+[waiting for message]
+bg=#aaaaaa</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>2618</x><y>364</y><w>133</w><h>98</h></coordinates><panel_attributes>_x.dat_
+changed data
+--
+_header:_
+[16 bytes] header_text (string)
+[8 bytes] date (float)
+[4 bytes] buffer_number (int)
+[4 bytes] current_number_of_parameters (int)
+
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1995</x><y>371</y><w>308</w><h>168</h></coordinates><panel_attributes>lt=&lt;&lt;-
+get data</panel_attributes><additional_attributes>420;10;230;10;230;220;10;220</additional_attributes></element><element><id>Relation</id><coordinates><x>1337</x><y>525</y><w>133</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-
+get data</panel_attributes><additional_attributes>170;10;100;10;100;80;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>1995</x><y>525</y><w>308</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+get data</panel_attributes><additional_attributes>420;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2037</x><y>567</y><w>266</w><h>98</h></coordinates><panel_attributes>lt=&lt;&lt;-
+get data</panel_attributes><additional_attributes>360;10;170;10;170;120;10;120</additional_attributes></element><element><id>Relation</id><coordinates><x>2037</x><y>658</y><w>266</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-
+get data</panel_attributes><additional_attributes>360;80;170;80;170;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2513</x><y>371</y><w>119</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+writing</panel_attributes><additional_attributes>150;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2513</x><y>539</y><w>119</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+writing</panel_attributes><additional_attributes>150;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>2513</x><y>700</y><w>133</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+writing</panel_attributes><additional_attributes>170;20;10;20</additional_attributes></element><element><id>UMLNote</id><coordinates><x>2618</x><y>525</y><w>140</w><h>133</h></coordinates><panel_attributes>_YYMMDD.VO{BLOCK_NUMBER}_
+archive file
+--
+_header:_
+[16 bytes] header_text (string)
+[8 bytes] date (float)
+[4 bytes] buffer_number (int)
+
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>2632</x><y>686</y><w>133</w><h>91</h></coordinates><panel_attributes>_out.dat_
+full array of data
+--
+_header:_
+[16 bytes] header_text (string)
+[8 bytes] date (float)
+[4 bytes] buffer_number (int)
+
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>511</x><y>252</y><w>147</w><h>49</h></coordinates><panel_attributes>_object: Logger_
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>749</x><y>252</y><w>98</w><h>49</h></coordinates><panel_attributes>log.txt
+
+
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>651</x><y>259</y><w>112</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+writing</panel_attributes><additional_attributes>140;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>483</y><w>196</w><h>98</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes><additional_attributes>260;10;150;10;150;120;10;120</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>581</y><w>210</w><h>91</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes><additional_attributes>280;100;150;100;150;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3066</x><y>623</y><w>147</w><h>63</h></coordinates><panel_attributes>_parameter_
+--
+[4 bytes] Value (float)
+[1 byte] Status (char)
+bg=blue
+fg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2758</x><y>651</y><w>322</w><h>77</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes><additional_attributes>10;80;60;80;60;10;440;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>3059</x><y>441</y><w>147</w><h>63</h></coordinates><panel_attributes>_changed parameter_
+--
+[4 bytes] number (int)
+[4 bytes] Value (float)
+[1 byte] Status (char)
+bg=blue
+fg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2744</x><y>385</y><w>329</w><h>98</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes><additional_attributes>10;10;60;10;60;120;450;120</additional_attributes></element><element><id>Relation</id><coordinates><x>2968</x><y>476</y><w>105</w><h>84</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes><additional_attributes>10;90;60;90;60;10;130;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2968</x><y>595</y><w>112</w><h>63</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes><additional_attributes>10;10;70;10;70;70;140;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>2828</x><y>581</y><w>147</w><h>49</h></coordinates><panel_attributes>_object: Class_
+--
+id: Long="36548"
+[waiting for message]
+
+bg=#0000aa
+fg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>2828</x><y>511</y><w>147</w><h>49</h></coordinates><panel_attributes>_object: Class_
+--
+id: Long="36548"
+[waiting for message]
+
+bg=#0000aa
+fg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>2751</x><y>532</y><w>91</w><h>28</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes><additional_attributes>10;10;110;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2751</x><y>602</y><w>91</w><h>28</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes><additional_attributes>10;10;110;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1316</x><y>714</y><w>308</w><h>161</h></coordinates><panel_attributes>_TechnologicalParametersArray_
+--
+total_number_of_parameters: int 
+parameters_array: Array[TechnologicalParameter]
+number_of_valid_parameters: int 
+time: datetime
+--
+set_time(time: datetime):
+set_empty_parameters_array()
+set_number_of_valid_parameters()
+check_number_of_parameters()
+append_empty_values_to_array():
+get_time() -&gt; datetime
+set_technological_parameter(number: int, parameters_tuple: tuple):
+   </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>903</x><y>784</y><w>294</w><h>322</h></coordinates><panel_attributes>_TechnologicalParameter_
+--
+number: int
+time: datetime
+value: bytes
+signal: bytes
+--
+set_number(number: bytes or int)
+set_value(value: bytes)
+set_signal(signal: bytes)
+set_time(time: datetime)
+set_all_values(number: int, time: datetime, value: bytes, signal: bytes)
+set_all_values_from_tuple(tuple_with_parameters: tuple)
+set_empty()
+get_time() -&gt; datetime
+get_time_in_tdatetime() -&gt; double
+get_value() -&gt; bytes
+get_signal() -&gt; bytes
+get_number() -&gt; int
+get_number_in_bytes() -&gt; bytes
+get_state() -&gt; bool
+get_all_values() -&gt; tuple
+__eq__(parameter: TechnologicalParameter) -&gt; bool
+check_number() -&gt; bool
+check_value() -&gt; bool
+check_state() -&gt; bool
+get_technological_parameter_from_bytes(bytes_array: bytearray)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1190</x><y>805</y><w>140</w><h>21</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>180;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1232</x><y>595</y><w>105</w><h>175</h></coordinates><panel_attributes>lt=&lt;.
+&lt;&lt;instanceOf&gt;&gt;</panel_attributes><additional_attributes>123;231;10;230;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1617</x><y>686</y><w>308</w><h>98</h></coordinates><panel_attributes>lt=&lt;.
+&lt;&lt;instanceOf&gt;&gt;</panel_attributes><additional_attributes>13;121;420;120;420;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1190</x><y>364</y><w>147</w><h>49</h></coordinates><panel_attributes>_object: buffer_parameters_array_
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1162</x><y>462</y><w>182</w><h>63</h></coordinates><panel_attributes>_object: current_parameters_array_
+--
+total_number_of_parameters = 200000
+parameters_array = Array[200000]
+time: {current}</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1330</x><y>385</y><w>140</w><h>133</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>180;170;110;170;110;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1337</x><y>511</y><w>133</w><h>21</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>170;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1099</x><y>385</y><w>105</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+from last cycle</panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1071</x><y>483</y><w>105</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;-
+from last cycle</panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>693</x><y>700</y><w>161</w><h>49</h></coordinates><panel_attributes>_object: reading_buffer_array_
+--
+total_number_of_parameters = 200000
+parameters_array = Array[200000]
+time: {current}</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>847</x><y>602</y><w>105</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>130;10;90;10;90;180;10;180</additional_attributes></element><element><id>Relation</id><coordinates><x>847</x><y>728</y><w>490</w><h>77</h></coordinates><panel_attributes>lt=&lt;.
+&lt;&lt;instanceOf&gt;&gt;</panel_attributes><additional_attributes>673;91;520;90;520;20;10;20</additional_attributes></element></diagram>
