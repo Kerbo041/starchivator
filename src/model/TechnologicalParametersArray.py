@@ -32,12 +32,12 @@ class TechnologicalParametersArray:
                     number_of_valid_parameters += 1
         self.number_of_valid_parameters = number_of_valid_parameters
     
-    def check_length_of_number_of_parameters(self):
+    def check_number_of_parameters(self):
         return len(self.ParametersArray) == self.total_number_of_parameters
 
     def append_empty_values_to_array(self):
         self.set_number_of_valid_parameters()
-        if not self.check_length_of_number_of_parameters():
+        if not self.check_number_of_parameters():
             for i in range(self.number_of_valid_parameters, self.total_number_of_parameters):
                 self.parameters_array.append(TechnologicalParameter())
     
