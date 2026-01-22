@@ -14,12 +14,14 @@ class TechnologicalParameter:
         time=b"\xff\xff\xff\xff\xff\xff\xff\xff",
         value=b"\xff\xff\xff\xff",
         signal=b"\xff",
+        signal2 = b"\x00",
         logger: Logger = None,
     ):
         self.set_number(number)
         self.set_time(time)
         self.set_value(value)
         self.set_signal(signal)
+        self.set_signal2(signal2)
         self.state = self.check_state()
         self.logger = logger
 
@@ -54,7 +56,15 @@ class TechnologicalParameter:
             and len(signal) == 1
         ):
             self.signal = signal
-
+            
+    def set_signal2(self, signal):
+        if (
+            signal is not None
+            and (type(signal) is bytearray or type(signal) is bytes)
+            and len(signal) == 1
+        ):
+            self.signal2 = signal
+            
     def set_time(self, time, valid=True):
         try:
             if valid:
@@ -89,19 +99,21 @@ class TechnologicalParameter:
             if self.logger:
                 self.logger.log(exception)
 
-    def set_all_values(self, number, time, value, signal):
+    def set_all_values(self, number, time, value, signal, signal2):
         self.set_number(number)
         self.set_time(time)
         self.set_value(value)
         self.set_signal(signal)
+        self.set_signal2(signal2)
         self.check_state()
 
     def set_all_values_from_tuple(self, tuple_with_parameters):
-        (number, time, value, signal) = tuple_with_parameters
+        (number, time, value, signal, signal2) = tuple_with_parameters
         self.set_number(number)
         self.set_time(time)
         self.set_value(value)
         self.set_signal(signal)
+        self.set_signal2(signal2)
         self.check_state()
 
     def set_empty(self):
@@ -109,6 +121,7 @@ class TechnologicalParameter:
         self.set_time(b"\xff\xff\xff\xff\xff\xff\xff\xff")
         self.set_value(b"\xff\xff\xff\xff\xff\xff\xff\xff")
         self.set_signal(b"\xff")
+        self.set_signal2(b"\xff")
 
     # endregion
 
@@ -126,6 +139,9 @@ class TechnologicalParameter:
 
     def get_signal(self):
         return self.signal
+    
+    def get_signal2(self):
+        return self.signal2
 
     def get_number(self):
         return self.number
@@ -137,7 +153,7 @@ class TechnologicalParameter:
         return self.check_state()
 
     def get_all_values(self):
-        return (self.get_number(), self.get_time(), self.get_value(), self.get_signal())
+        return (self.get_number(), self.get_time(), self.get_value(), self.get_signal(), self.get_signal2())
 
     # endregion
 

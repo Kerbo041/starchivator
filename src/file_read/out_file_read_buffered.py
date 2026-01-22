@@ -4,7 +4,7 @@ from model.Logger import Logger
 from model.TechnologicalParameter import TechnologicalParameter
 from model.TechnologicalParametersArray import TechnologicalParametersArray
 from model.Config import Config, ConfigFilePaths
-
+from model.TDateTime import TDateTime
 
 def parse_readed_out_file_from_buffer(
     out_file_buffered_data,
@@ -14,15 +14,21 @@ def parse_readed_out_file_from_buffer(
 ):
     try:
         for iter in range(number_of_values):
-            out_file_line = out_file_buffered_data[iter * 17 : (iter + 1) * 17]
-            if len(out_file_line) < 17:
+            out_file_line = out_file_buffered_data[iter * 18 : (iter + 1) * 18]
+            if len(out_file_line) < 18:
                 return None
             number_in_bytes = out_file_line[0:4]
             if number_in_bytes == b"":
                 return None
+            if number_in_bytes == bytearray(b'\xff\xff\xff\xff'):
+                continue
             number = unpack("<i", number_in_bytes)[0]
-            reading_buffer_array.set_technological_parameter(iter, (
-                number, out_file_line[4:12], out_file_line[12:16], out_file_line[16:17]
+            date  = TDateTime.tdatetime_to_datetime(unpack("<d", out_file_line[4:12])[0])
+            value = out_file_line[12:16]
+            signal = out_file_line[16:17]
+            signal_2 = out_file_line[17:18]
+            reading_buffer_array.set_technological_parameter(number, (
+                number, out_file_line[4:12], out_file_line[12:16], out_file_line[16:17], out_file_line[17:18]
             ))
             # reading_buffer_array.parameters_array[iter].set_all_values(
             #     number, out_file_line[4:12], out_file_line[12:16], out_file_line[16:17]
@@ -36,8 +42,8 @@ def parse_readed_out_file_from_buffer(
 
 def fill_values_end_with_empty_lines(array_of_values, count_of_values):
     len_of_array = len(array_of_values)
-    if len_of_array < (count_of_values * 17):
-        for i in range(len_of_array, (count_of_values * 17)):
+    if len_of_array < (count_of_values * 18):
+        for i in range(len_of_array, (count_of_values * 18)):
             array_of_values += b"\xff"
 
 
@@ -70,7 +76,7 @@ def get_out_data_with_buffer(
             buffered_out_1_file_data = bytearray(out_file.read()) 
 
     except Exception as exeption:
-        logger.debug_log(f"file reading: {exeption}")
+        logger.log(f"file reading: {exeption}")
         return None
     out_file_buffered_data = arrays_join(
         buffered_out_0_file_data,
