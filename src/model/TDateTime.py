@@ -21,7 +21,7 @@ class TDateTime:
 
     def set_tdatetime(self, time_in_tdatetime: float) -> None:
         self.time = self.tdatetime_to_datetime(time_in_tdatetime)
-
+    
     def get_time(self) -> datetime:
         return self.time
 
