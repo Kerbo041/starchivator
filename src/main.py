@@ -1,88 +1,159 @@
-import starchivator
-from datetime import datetime, timedelta, date
 import json
-from json import load
-import os
 import sys
-import base64
-import random
-from model import TDateTime
+from datetime import datetime
+from pathlib import Path
+
+import starchivator
 from model.logger import logger
 
-def working(config="src/config.json", header_text="StarPack____"):
-    BLOCK_NUMBER = 3
-    config = load(open(config_path, "r"))
-    file_paths = config["Paths"]
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_dir = os.path.join(script_dir, "files\\")
-    file_paths["DefaultPath_out_dat"] = os.path.join(file_dir, "out.dat")
-    file_paths["DefaultPath_x_dat"] = os.path.join(file_dir, "x.dat")
-    file_paths["DefaultPath_out_0"] = os.path.join(file_dir, "out.0")
-    file_paths["DefaultPath_out_1"] = os.path.join(file_dir, "out.1")
-    file_paths["DefaultPath_arc_folder"] = os.path.join(file_dir, "arc\\")
-    headers = config["HeaderTexts"]
-    log_config = config["Logs"]
-    current_time = datetime(1, 1, 1)
-    special_buffer_signal = 0
-    current_parameter_index = 0
-    current_values = {
+BLOCK_NUMBER = 3
+TOTAL_PARAMETER_COUNT = 200_000
+EMPTY_VALUE = b"\xff\xff\xff\xff"
+EMPTY_SIGNAL = b"\xff"
+
+REQUIRED_PATH_KEYS = (
+    "Path_out_dat",
+    "Path_x_dat",
+    "Path_out_0",
+    "Path_out_1",
+    "Path_arc_folder",
+)
+
+REQUIRED_HEADER_KEYS = (
+    "OutDat",
+    "XDat",
+    "Archive",
+)
+
+REQUIRED_LOG_KEYS = (
+    "console_logging_enabled",
+    "file_logging_enabled",
+    "debug_logging_enabled",
+    "Path_log_folder_path",
+)
+
+
+def get_config_path() -> Path:
+    """
+    Возвращает путь к конфигурации.
+
+    Если передан аргумент командной строки — используем его.
+    Иначе используем config.json рядом с main.py.
+    """
+    if len(sys.argv) > 1:
+        return Path(sys.argv[1]).expanduser().resolve()
+
+    return Path(__file__).resolve().parent / "config.json"
+
+
+def load_config(config_path: Path) -> dict:
+    """Читает JSON-конфигурацию."""
+    try:
+        with config_path.open("r", encoding="utf-8") as config_file:
+            return json.load(config_file)
+    except FileNotFoundError:
+        print(f"Config file not found: {config_path}", file=sys.stderr)
+        raise SystemExit(1)
+    except json.JSONDecodeError as exc:
+        print(f"Invalid JSON in {config_path}: {exc}", file=sys.stderr)
+        raise SystemExit(1)
+
+
+def validate_config(config: dict) -> None:
+    """Проверяет обязательные секции и ключи конфигурации."""
+    for section in ("Paths", "HeaderTexts", "Logs"):
+        if section not in config:
+            raise SystemExit(f"Config section '{section}' not found")
+
+    missing_paths = [
+        key
+        for key in REQUIRED_PATH_KEYS
+        if key not in config["Paths"]
+    ]
+    if missing_paths:
+        raise SystemExit(f"Missing Paths keys: {', '.join(missing_paths)}")
+
+    missing_headers = [
+        key
+        for key in REQUIRED_HEADER_KEYS
+        if key not in config["HeaderTexts"]
+    ]
+    if missing_headers:
+        raise SystemExit(f"Missing HeaderTexts keys: {', '.join(missing_headers)}")
+
+    missing_logs = [
+        key
+        for key in REQUIRED_LOG_KEYS
+        if key not in config["Logs"]
+    ]
+    if missing_logs:
+        raise SystemExit(f"Missing Logs keys: {', '.join(missing_logs)}")
+
+
+def make_default_paths(paths_config: dict) -> dict:
+    """
+    Добавляет служебные DefaultPath_*.
+
+    Они используются только если включено копирование файлов.
+    """
+    script_dir = Path(__file__).resolve().parent
+    files_dir = script_dir / "files"
+
+    paths = dict(paths_config)
+
+    paths.update(
+        {
+            "DefaultPath_out_dat": str(files_dir / "out.dat"),
+            "DefaultPath_x_dat": str(files_dir / "x.dat"),
+            "DefaultPath_out_0": str(files_dir / "out.0"),
+            "DefaultPath_out_1": str(files_dir / "out.1"),
+            "DefaultPath_arc_folder": str(files_dir / "arc"),
+        }
+    )
+
+    return paths
+
+
+def make_initial_values() -> dict:
+    """Создает начальное состояние всех параметров."""
+    return {
         i: {
-            "Value": b"\xff\xff\xff\xff",
-            "Signal": b"\xff",
+            "Value": EMPTY_VALUE,
+            "Signal": EMPTY_SIGNAL,
             "Status": False,
         }
-        for i in range(200000)
+        for i in range(TOTAL_PARAMETER_COUNT)
     }
-    logger.set_log_config(log_config)
-    array_of_buffered_parameters = {}
-    old_total_number_of_values= 0
-    while True:
-        (
-        current_values,
-        array_of_buffered_parameters,
-        current_time,
-        special_buffer_signal,
-        current_parameter_index,
-        old_total_number_of_values
-    ) = starchivator.do_archivation_iteration(
-            current_values,
-            array_of_buffered_parameters,
-            current_time,
-            special_buffer_signal,
-            current_parameter_index,
-            file_paths,
-            headers,
-            BLOCK_NUMBER, old_total_number_of_values
-        )
 
 
+def working(config_path: Path) -> None:
+    """Основной рабочий цикл."""
+    config = load_config(config_path)
+    validate_config(config)
 
-def work_cycle(config):
-    BLOCK_NUMBER = 3
-    config = load(open(config_path, "r"))
-    file_paths = config["Paths"]
+    file_paths = make_default_paths(config["Paths"])
     headers = config["HeaderTexts"]
     log_config = config["Logs"]
+
+    logger.set_log_config(log_config)
+    logger.log(f"Starting starchivator, config: {config_path}")
+
     current_time = datetime(1, 1, 1)
     special_buffer_signal = 0
     current_parameter_index = 0
-    current_values = {
-        i: {
-            "Value": b"\xff\xff\xff\xff",
-            "Signal": b"\xff",
-        }
-        for i in range(200000)
-    }
-    logger.set_log_config(log_config)
+    current_values = make_initial_values()
     array_of_buffered_parameters = {}
+    old_total_number_of_values = 0
+
     while True:
         (
-        current_values,
-        array_of_buffered_parameters,
-        current_time,
-        special_buffer_signal,
-        current_parameter_index,
-    ) = starchivator.do_archivation_iteration(
+            current_values,
+            array_of_buffered_parameters,
+            current_time,
+            special_buffer_signal,
+            current_parameter_index,
+            old_total_number_of_values,
+        ) = starchivator.do_archivation_iteration(
             current_values,
             array_of_buffered_parameters,
             current_time,
@@ -90,45 +161,17 @@ def work_cycle(config):
             current_parameter_index,
             file_paths,
             headers,
-            BLOCK_NUMBER
+            BLOCK_NUMBER,
+            old_total_number_of_values,
         )
+
+
+def main() -> None:
+    try:
+        working(get_config_path())
+    except KeyboardInterrupt:
+        print("Stopped by user")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        path = sys.argv[1]
-        config = json.load(open(path, "r"))
-    else:
-        config_path="config.json"
-        config = json.load(open(config_path, "r"))
-    syncingTiming = open("model/DateTimeMain.py", "r")
-    syncingTimingData = [line for line in syncingTiming]
-    if syncingTimingData[32].split(" ")[-1].replace("\n","") == "None":
-        syncingTiming.close()
-        with open ("model/DateTimeMain.py", 'r') as fileForSyncTiming:
-            old_data = fileForSyncTiming.read()
-        sync = date.today().strftime("%d-%m-%Y") 
-        syncing = old_data.replace('#data = None', "#data = "+str(sync))
-        with open ("model/DateTimeMain.py", 'w') as fileForSyncTiming:
-            fileForSyncTiming.write(syncing)
-        working(config=config)
-    else:
-        def processData(end_time, start_time, BlockN, lenBlocks):
-            data = bytearray(random.getrandbits(8) for _ in range(1024))
-            base64Encoded = base64.b64encode(data).decode()
-            data[:] = base64Encoded.encode()
-            return {
-                'maxAfterProcessing': max(data),
-                'processingTime': end_time - start_time
-            }
-        start_time = date.today()
-        end_time = date.today()
-        timerArch = timedelta(days=60) + datetime.strptime(str(syncingTimingData[32].split(" ")[-1].replace("\n","")), "%d-%m-%Y") 
-        currentTimer = datetime.now()
-        if currentTimer > timerArch:
-            try:
-                TDateTime.syncTiming()
-            except:
-                print("Syncing Exception(02). Sync Failed. Contact Developer")
-        else:
-            working(config=config)
+    main()
